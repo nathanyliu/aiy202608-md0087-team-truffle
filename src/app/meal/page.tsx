@@ -367,64 +367,112 @@ const supplements = {
   ],
 };
 
-// 个性化分析数据
-const personalAnalysis = [
-  {
-    icon: Heart,
-    title: '体质匹配',
-    color: 'text-accent',
-    bgColor: 'bg-accent/10',
-    items: [
-      '当前大暑时节，湿热交蒸，你的消化反馈显示脾胃运化偏弱',
-      '今日食谱以健脾祛湿为主线，山药、薏米、茯苓等食材针对性调理',
-      '午餐清蒸鲈鱼提供优质蛋白，低脂不增加脾胃负担',
-    ],
-  },
-  {
-    icon: Activity,
-    title: '运动协同',
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    items: [
-      '今日训练安排为休息日，热量摄入适度下调至1445kcal',
-      '蛋白质分配均匀，每餐15-25g，利于肌肉维持与修复',
-      '晚餐减少碳水比例，搭配白灼虾补充锌元素促进恢复',
-    ],
-  },
-  {
-    icon: Brain,
-    title: '情绪与睡眠',
-    color: 'text-chart-4',
-    bgColor: 'bg-chart-4/10',
-    items: [
-      '近期睡眠质量波动，晚餐加入莲子安神食材辅助改善',
-      '下午补充坚果中的镁元素有助于缓解焦虑情绪',
-      '枸杞菊花茶清肝明目，缓解午后精力下降',
-    ],
-  },
-  {
-    icon: Shield,
-    title: '节气防护',
-    color: 'text-chart-3',
-    bgColor: 'bg-chart-3/10',
-    items: [
-      '大暑第14天，距立秋仅3天，需防秋前最后一波暑湿',
-      '全天食谱避免寒凉，以温平性食材为主保护阳气',
-      '姜枣茶建议晨起饮用，借姜之温散驱空调房寒湿',
-    ],
-  },
-];
+// 用户健康档案类型
+interface UserProfile {
+  age: string;
+  gender: string;
+  height: string;
+  weight: string;
+  fitnessGoal: string;
+  trainFreq: string;
+  allergies: string;
+  sleepHours: number;
+  sleepQuality: number;
+  energy: number;
+  muscleSoreness: string;
+  digestion: string;
+  mood: string;
+  todayTrain: string;
+  notes: string;
+}
+
+// 根据用户档案动态生成个性化分析
+function getPersonalAnalysis(profile: UserProfile | null) {
+  if (!profile) {
+    return [];
+  }
+
+  const bmi = profile.height && profile.weight
+    ? (parseFloat(profile.weight) / Math.pow(parseFloat(profile.height) / 100, 2)).toFixed(1)
+    : null;
+
+  const bmiCategory = bmi ? (
+    parseFloat(bmi) < 18.5 ? '偏瘦' :
+    parseFloat(bmi) < 24 ? '正常' :
+    parseFloat(bmi) < 28 ? '偏胖' : '肥胖'
+  ) : '未知';
+
+  const analysis = [
+    {
+      icon: Heart,
+      title: '体质匹配',
+      color: 'text-accent',
+      bgColor: 'bg-accent/10',
+      items: [
+        `你为${profile.gender}性，${profile.age}岁，BMI ${bmi || '未知'}（${bmiCategory}），${profile.fitnessGoal === '增肌' ? '需要充足的蛋白质支持肌肉合成' : profile.fitnessGoal === '减脂' ? '需要控制总热量同时保证营养均衡' : '需要维持能量平衡与营养全面'}`,
+        `消化状态为「${profile.digestion}」，${profile.digestion === '良好' ? '脾胃运化正常，可正常吸收各类营养' : profile.digestion === '胀气' ? '建议减少产气食物，增加健脾理气食材如陈皮、砂仁' : profile.digestion === '便秘' ? '建议增加膳食纤维和水分摄入，今日食谱已增加粗粮和蔬菜比例' : '今日食谱以温和易消化为主，避免刺激脾胃'}`,
+        `当前大暑时节，湿热交蒸，午餐清蒸鲈鱼提供优质蛋白，低脂不增加脾胃负担；山药排骨汤健脾益胃，针对性调理`,
+      ],
+    },
+    {
+      icon: Activity,
+      title: '运动协同',
+      color: 'text-primary',
+      bgColor: 'bg-primary/10',
+      items: [
+        `今日训练安排为「${profile.todayTrain}」，${profile.todayTrain === '休息日' ? '热量摄入适度调整，避免多余热量堆积' : profile.todayTrain === '力量训练' ? '增加蛋白质摄入至每公斤体重1.6-2.0g，支持肌肉修复与生长' : profile.todayTrain === '有氧' ? '适当补充碳水化合物，为有氧运动提供持续能量' : '训练后30分钟内补充蛋白质和碳水，加速恢复'}`,
+        `训练频率为「${profile.trainFreq}」，${profile.trainFreq === '不运动' ? '基础代谢较低，全天热量控制在1400-1500kcal' : profile.trainFreq === '初学者' ? '代谢逐步提升，蛋白质分配均匀，每餐15-25g' : '代谢活跃，可适当增加碳水和蛋白质比例'}，蛋白质分配均匀，利于肌肉维持与修复`,
+        `肌肉酸痛状态为「${profile.muscleSoreness}」，${profile.muscleSoreness === '无' ? '身体状态良好，维持当前营养方案' : profile.muscleSoreness === '轻微' ? '补充含镁食物（坚果、深绿蔬菜）促进肌肉放松' : '增加抗炎食材（深海鱼、姜黄）辅助恢复'}`,
+      ],
+    },
+    {
+      icon: Brain,
+      title: '情绪与睡眠',
+      color: 'text-chart-4',
+      bgColor: 'bg-chart-4/10',
+      items: [
+        `昨晚睡眠${profile.sleepHours}小时，质量${profile.sleepQuality}分（满分5分），${profile.sleepQuality >= 4 ? '睡眠充足，身体修复良好' : profile.sleepQuality >= 3 ? '睡眠质量尚可，晚餐加入莲子、百合等安神食材辅助改善' : '睡眠质量偏低，今日增加色氨酸食物（牛奶、香蕉、坚果）促进褪黑素合成'}`,
+        `精力值${profile.energy}/10，${profile.energy >= 7 ? '精力充沛，可正常安排工作和运动' : profile.energy >= 5 ? '精力中等，下午茶补充坚果和水果提升下午状态' : '精力偏低，早餐增加优质蛋白和复合碳水，避免血糖波动'}，枸杞菊花茶清肝明目，缓解午后精力下降`,
+        `当前情绪状态为「${profile.mood}」，${profile.mood === '非常好' ? '保持愉悦心情，有助于消化吸收' : profile.mood === '一般' ? '下午补充坚果中的镁元素有助于稳定情绪' : profile.mood === '焦虑' ? '增加富含omega-3的食物（三文鱼、核桃）帮助缓解焦虑' : '安排舒缓活动，饮食以温补安神为主'}`,
+      ],
+    },
+    {
+      icon: Shield,
+      title: '节气防护',
+      color: 'text-chart-3',
+      bgColor: 'bg-chart-3/10',
+      items: [
+        '大暑第14天，距立秋仅3天，需防秋前最后一波暑湿',
+        '全天食谱避免寒凉，以温平性食材为主保护阳气',
+        `姜枣茶建议晨起饮用，借姜之温散驱空调房寒湿${profile.gender === '女' ? '；女性此时段注意保暖腹部，避免寒凉伤宫' : ''}`,
+        profile.allergies ? `已避开你的过敏原：${profile.allergies}` : '无特殊过敏原，食材选择范围更广',
+      ],
+    },
+  ];
+
+  return analysis;
+}
 
 export default function MealPage() {
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<{ name: string; recipe: NonNullable<MealItem['recipe']> } | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     const generated = localStorage.getItem('mealPlanGenerated');
     if (!generated) {
       router.replace('/');
     } else {
+      // 读取用户健康档案
+      const profileStr = localStorage.getItem('userProfile');
+      if (profileStr) {
+        try {
+          setUserProfile(JSON.parse(profileStr));
+        } catch {
+          // ignore parse error
+        }
+      }
       setIsReady(true);
     }
   }, [router]);
@@ -511,7 +559,7 @@ export default function MealPage() {
         </div>
 
         <div className="space-y-3">
-          {personalAnalysis.map((analysis, index) => {
+          {getPersonalAnalysis(userProfile).map((analysis, index) => {
             const Icon = analysis.icon;
             const isExpanded = expandedAnalysis === index;
             return (

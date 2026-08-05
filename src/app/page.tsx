@@ -823,6 +823,12 @@ export default function HomePage() {
         {isProfileComplete ? (
           <button
             onClick={() => {
+              // 保存用户健康档案到 localStorage，供今日食方页面读取
+              const userProfile = {
+                age, gender, height, weight, fitnessGoal, trainFreq, allergies,
+                sleepHours, sleepQuality, energy, muscleSoreness, digestion, mood, todayTrain, notes,
+              };
+              localStorage.setItem('userProfile', JSON.stringify(userProfile));
               localStorage.setItem('mealPlanGenerated', 'true');
               router.push('/meal');
             }}
