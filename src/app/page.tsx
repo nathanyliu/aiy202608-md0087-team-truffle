@@ -497,23 +497,31 @@ export default function HomePage() {
 
   const conflicts = detectConflicts();
 
-  // 欢迎页面状态 - 初始始终显示欢迎页，避免服务端/客户端渲染不一致导致闪烁
-  const [showWelcome, setShowWelcome] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
+  // 欢迎页面状态 - 使用 loading 状态避免闪烁
+  const [showWelcome, setShowWelcome] = useState<boolean | null>(null);
 
   // 组件挂载后检查是否已访问过
   useEffect(() => {
-    setIsMounted(true);
     const hasVisited = localStorage.getItem('hasVisited');
-    if (hasVisited) {
-      setShowWelcome(false);
-    }
+    setShowWelcome(!hasVisited);
   }, []);
 
   const handleStart = () => {
     localStorage.setItem('hasVisited', 'true');
     setShowWelcome(false);
   };
+
+  // 加载中状态 - 避免闪烁
+  if (showWelcome === null) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <Leaf className="h-12 w-12 text-accent/50" />
+          <div className="h-4 w-32 bg-muted rounded"></div>
+        </div>
+      </div>
+    );
+  }
 
   // 欢迎页面
   if (showWelcome) {
