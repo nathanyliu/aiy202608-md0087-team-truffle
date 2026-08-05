@@ -643,6 +643,10 @@ export default function HomePage() {
           )}
         </div>
 
+        <p className="text-xs text-muted-foreground">
+          选择你喜欢的食材，AI 会优先纳入这些偏好，同时结合时令节气、营养均衡等因素，为你搭配更丰富的完整餐单
+        </p>
+
         {/* 分类标签 */}
         <div className="flex flex-wrap gap-2">
           {foodDatabase.map(cat => (
