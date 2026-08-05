@@ -519,6 +519,9 @@ export default function CirclePage() {
                     </div>
                   ))}
                 </div>
+                <p className="text-xs text-muted-foreground/60 mt-1">
+                  数据参考《中国食物成分表》及 USDA FoodData Central
+                </p>
               </div>
 
               {/* 做法步骤 */}

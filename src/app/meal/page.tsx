@@ -24,6 +24,7 @@ import {
   TrendingUp,
   Cherry,
   CupSoda,
+  BookOpen,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -236,6 +237,19 @@ export default function MealPage() {
             <p className="text-xs text-muted-foreground">{item.label}</p>
           </div>
         ))}
+      </div>
+
+      {/* 数据来源说明 */}
+      <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border/30">
+        <BookOpen className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+        <div className="text-xs text-muted-foreground leading-relaxed">
+          <span className="font-medium text-foreground/70">数据来源：</span>
+          营养成分数据参考
+          <span className="text-foreground/70 font-medium">《中国食物成分表》第6版</span>
+          （中国疾病预防控制中心营养与健康所编著）及
+          <span className="text-foreground/70 font-medium"> USDA FoodData Central</span>
+          （美国农业部食物数据中心）。热量需求基于中国营养学会《中国居民膳食营养素参考摄入量（DRIs）》计算。
+        </div>
       </div>
 
       {/* 个性化营养分析 */}
