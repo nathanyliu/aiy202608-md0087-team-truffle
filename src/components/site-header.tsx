@@ -52,7 +52,7 @@ export function SiteHeader() {
 
         {/* Mobile nav */}
         <nav className="flex md:hidden items-center gap-0.5 overflow-x-auto">
-          {navItems.slice(0, 4).map((item) => {
+          {navItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
             return (
