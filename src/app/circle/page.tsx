@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Users,
   Heart,
@@ -16,6 +16,7 @@ import {
   Apple,
   Search,
   Filter,
+  Upload,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -51,9 +52,10 @@ interface CommunityRecipe {
   isLiked: boolean;
   steps: string[];
   fitReasons: string[];
+  isUserCreated?: boolean;
 }
 
-const communityRecipes: CommunityRecipe[] = [
+const defaultRecipes: CommunityRecipe[] = [
   {
     id: 1,
     author: '食养达人小林',
@@ -98,105 +100,104 @@ const communityRecipes: CommunityRecipe[] = [
     difficulty: '简单',
     servings: '2人份',
     ingredients: [
-      { name: '铁棍山药', amount: '150g' },
+      { name: '山药', amount: '100g' },
       { name: '莲子', amount: '30g' },
-      { name: '小米', amount: '80g' },
-      { name: '红枣', amount: '5颗' },
+      { name: '粳米', amount: '80g' },
       { name: '枸杞', amount: '10g' },
-      { name: '冰糖', amount: '适量' },
+      { name: '清水', amount: '800ml' },
     ],
-    nutrition: { calories: '245kcal', protein: '8g', carbs: '48g', fat: '2g', fiber: '5g' },
+    nutrition: { calories: '220kcal', protein: '6g', carbs: '45g', fat: '1g', fiber: '4g' },
     tags: ['健脾', '养胃', '早餐'],
-    likes: 567,
-    comments: 89,
-    isLiked: true,
-    steps: [
-      '莲子提前浸泡1小时，山药去皮切小块',
-      '小米淘洗干净，与莲子一同入锅加水',
-      '大火烧开后转小火煮20分钟',
-      '加入山药块和红枣继续煮15分钟',
-      '最后加入枸杞和冰糖，煮5分钟即可',
-    ],
-    fitReasons: ['山药健脾益胃', '小米养胃安神', '适合消化不佳时食用'],
-  },
-  {
-    id: 3,
-    author: '健身厨房Amy',
-    avatar: '💪',
-    time: '6小时前',
-    title: '清蒸鲈鱼配时蔬',
-    desc: '高蛋白低脂的经典搭配，减脂增肌期的最佳选择',
-    emoji: '🐟',
-    cookTime: '25分钟',
-    difficulty: '简单',
-    servings: '1人份',
-    ingredients: [
-      { name: '鲈鱼', amount: '1条(约350g)' },
-      { name: '西兰花', amount: '100g' },
-      { name: '胡萝卜', amount: '50g' },
-      { name: '葱姜丝', amount: '适量' },
-      { name: '蒸鱼豉油', amount: '2勺' },
-      { name: '料酒', amount: '1勺' },
-    ],
-    nutrition: { calories: '285kcal', protein: '35g', carbs: '8g', fat: '12g', fiber: '4g' },
-    tags: ['高蛋白', '低脂', '减脂餐'],
     likes: 189,
     comments: 32,
     isLiked: false,
     steps: [
-      '鲈鱼处理干净，两面划刀，抹料酒和少许盐腌10分钟',
-      '盘底铺葱姜丝，放上鲈鱼，鱼身再放几片姜',
-      '水开后上锅大火蒸8-10分钟',
-      '蒸鱼期间焯烫西兰花和胡萝卜',
-      '出锅淋蒸鱼豉油，摆上蔬菜，浇热油激香',
+      '莲子提前浸泡1小时，山药去皮切小块',
+      '粳米洗净，与莲子一起入锅加水',
+      '大火烧开后转小火煮30分钟',
+      '加入山药块继续煮15分钟至软糯',
+      '最后撒入枸杞，焖5分钟即可',
     ],
-    fitReasons: ['优质蛋白补充', '低脂不增加脾胃负担', '适合训练后恢复'],
+    fitReasons: ['山药健脾益胃', '莲子养心安神', '适合脾胃虚弱者'],
   },
   {
-    id: 4,
-    author: '茶道爱好者清风',
-    avatar: '🍵',
-    time: '昨天',
-    title: '枸杞菊花决明子茶',
-    desc: '清肝明目，适合长期用眼的上班族日常饮用',
-    emoji: '🫖',
-    cookTime: '10分钟',
+    id: 3,
+    author: '健身餐达人阿力',
+    avatar: '💪',
+    time: '6小时前',
+    title: '鸡胸肉藜麦沙拉',
+    desc: '高蛋白低脂，健身增肌必备，饱腹感强',
+    emoji: '🥗',
+    cookTime: '25分钟',
     difficulty: '简单',
     servings: '1人份',
     ingredients: [
-      { name: '枸杞', amount: '10g' },
-      { name: '菊花', amount: '5g' },
-      { name: '决明子', amount: '10g' },
-      { name: '冰糖', amount: '少许(可选)' },
+      { name: '鸡胸肉', amount: '150g' },
+      { name: '藜麦', amount: '50g' },
+      { name: '西兰花', amount: '80g' },
+      { name: '小番茄', amount: '5颗' },
+      { name: '橄榄油', amount: '1勺' },
+      { name: '黑胡椒', amount: '适量' },
     ],
-    nutrition: { calories: '15kcal', protein: '0g', carbs: '3g', fat: '0g', fiber: '0g' },
-    tags: ['明目', '清肝', '办公室'],
+    nutrition: { calories: '380kcal', protein: '35g', carbs: '28g', fat: '12g', fiber: '6g' },
+    tags: ['高蛋白', '增肌', '低脂'],
     likes: 312,
     comments: 56,
     isLiked: false,
     steps: [
-      '决明子提前用干锅小火炒至微香',
-      '将所有材料放入茶壶',
-      '注入沸水，焖泡5-8分钟',
-      '可反复冲泡至味淡',
+      '藜麦洗净，加水煮15分钟至透明圈出现，沥干备用',
+      '鸡胸肉用黑胡椒腌制10分钟，煎至两面金黄熟透',
+      '西兰花焯水2分钟，小番茄对半切开',
+      '将所有食材摆盘，淋上橄榄油，撒少许盐即可',
     ],
-    fitReasons: ['清肝火适合夏季', '缓解用眼疲劳', '温和不伤脾胃'],
+    fitReasons: ['高蛋白支持肌肉修复', '藜麦完全蛋白', '低脂适合减脂期'],
+  },
+  {
+    id: 4,
+    author: '养生博主小雅',
+    avatar: '🌸',
+    time: '8小时前',
+    title: '红枣桂圆补血茶',
+    desc: '女性养生必备，气血双补，面色红润',
+    emoji: '🍵',
+    cookTime: '30分钟',
+    difficulty: '简单',
+    servings: '2人份',
+    ingredients: [
+      { name: '红枣', amount: '8颗' },
+      { name: '桂圆', amount: '15g' },
+      { name: '枸杞', amount: '10g' },
+      { name: '红糖', amount: '20g' },
+      { name: '清水', amount: '600ml' },
+    ],
+    nutrition: { calories: '150kcal', protein: '2g', carbs: '35g', fat: '0g', fiber: '2g' },
+    tags: ['补血', '养颜', '女性'],
+    likes: 456,
+    comments: 78,
+    isLiked: false,
+    steps: [
+      '红枣去核，桂圆洗净',
+      '锅中加水，放入红枣和桂圆',
+      '大火烧开后转小火煮20分钟',
+      '加入枸杞和红糖，再煮5分钟即可',
+    ],
+    fitReasons: ['红枣补中益气', '桂圆养血安神', '适合气血不足者'],
   },
   {
     id: 5,
-    author: '素食主义小荷',
-    avatar: '🌱',
-    time: '昨天',
-    title: '百合银耳莲子羹',
-    desc: '滋阴润肺的甜品，胶质满满，冰镇后更好喝',
+    author: '甜品师小陈',
+    avatar: '👩‍🍳',
+    time: '1天前',
+    title: '银耳莲子百合羹',
+    desc: '滋阴润肺的 classic 甜品，口感软糯，适合全家',
     emoji: '🍮',
     cookTime: '1.5小时',
     difficulty: '中等',
-    servings: '2-3人份',
+    servings: '3-4人份',
     ingredients: [
       { name: '银耳', amount: '1朵(约30g)' },
-      { name: '百合(干)', amount: '20g' },
       { name: '莲子', amount: '30g' },
+      { name: '百合', amount: '20g' },
       { name: '红枣', amount: '6颗' },
       { name: '冰糖', amount: '30g' },
     ],
@@ -248,22 +249,70 @@ const communityRecipes: CommunityRecipe[] = [
 
 const topics = ['祛湿', '健脾', '高蛋白', '低脂', '滋阴', '驱寒', '明目', '消暑'];
 
+interface NewRecipeForm {
+  title: string;
+  desc: string;
+  emoji: string;
+  cookTime: string;
+  difficulty: string;
+  servings: string;
+  ingredients: string;
+  steps: string;
+  effects: string;
+  tags: string;
+}
+
 export default function CirclePage() {
-  const [recipes] = useState<CommunityRecipe[]>(communityRecipes);
+  const [recipes, setRecipes] = useState<CommunityRecipe[]>(defaultRecipes);
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<CommunityRecipe | null>(null);
   const [addedRecipes, setAddedRecipes] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFavorites, setShowFavorites] = useState(false);
-  const [favorites, setFavorites] = useState<number[]>(() => {
-    if (typeof window === 'undefined') return [];
-    const saved = localStorage.getItem('recipeFavorites');
-    return saved ? JSON.parse(saved) : [];
+  const [showUpload, setShowUpload] = useState(false);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [likedRecipes, setLikedRecipes] = useState<number[]>([]);
+  const [newRecipe, setNewRecipe] = useState<NewRecipeForm>({
+    title: '',
+    desc: '',
+    emoji: '🍲',
+    cookTime: '',
+    difficulty: '简单',
+    servings: '1人份',
+    ingredients: '',
+    steps: '',
+    effects: '',
+    tags: '',
   });
 
+  // Load data from localStorage on mount
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem('recipeFavorites');
+    const savedLikes = localStorage.getItem('recipeLikes');
+    const savedUserRecipes = localStorage.getItem('userRecipes');
+
+    if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
+    if (savedLikes) setLikedRecipes(JSON.parse(savedLikes));
+    if (savedUserRecipes) {
+      const userRecipes = JSON.parse(savedUserRecipes);
+      setRecipes([...defaultRecipes, ...userRecipes]);
+    }
+  }, []);
+
   const toggleLike = (id: number) => {
-    // In a real app this would update state
-    void id;
+    setLikedRecipes((prev) => {
+      const newLikes = prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id];
+      localStorage.setItem('recipeLikes', JSON.stringify(newLikes));
+      return newLikes;
+    });
+    // Update likes count in recipes
+    setRecipes((prev) =>
+      prev.map((r) =>
+        r.id === id
+          ? { ...r, likes: likedRecipes.includes(id) ? r.likes - 1 : r.likes + 1 }
+          : r
+      )
+    );
   };
 
   const addToMealPlan = (id: number) => {
@@ -280,8 +329,84 @@ export default function CirclePage() {
     });
   };
 
+  const handleUploadRecipe = () => {
+    if (!newRecipe.title || !newRecipe.ingredients || !newRecipe.steps) {
+      alert('请填写食谱名称、原料和做法');
+      return;
+    }
+
+    const ingredientList = newRecipe.ingredients
+      .split('\n')
+      .filter((line) => line.trim())
+      .map((line) => {
+        const parts = line.split(/[,，:：]/);
+        return {
+          name: parts[0]?.trim() || '',
+          amount: parts[1]?.trim() || '适量',
+        };
+      });
+
+    const stepList = newRecipe.steps
+      .split('\n')
+      .filter((line) => line.trim())
+      .map((line) => line.replace(/^\d+[.、)\]]\s*/, '').trim());
+
+    const tagList = newRecipe.tags
+      .split(/[,，、]/)
+      .filter((t) => t.trim())
+      .map((t) => t.trim());
+
+    const effectList = newRecipe.effects
+      .split('\n')
+      .filter((line) => line.trim())
+      .map((line) => line.replace(/^[-•·]\s*/, '').trim());
+
+    const userRecipe: CommunityRecipe = {
+      id: Date.now(),
+      author: '我',
+      avatar: '😊',
+      time: '刚刚',
+      title: newRecipe.title,
+      desc: newRecipe.desc || '我的自制食谱',
+      emoji: newRecipe.emoji || '🍲',
+      cookTime: newRecipe.cookTime || '未知',
+      difficulty: newRecipe.difficulty,
+      servings: newRecipe.servings,
+      ingredients: ingredientList,
+      nutrition: { calories: '--', protein: '--', carbs: '--', fat: '--', fiber: '--' },
+      tags: tagList.length > 0 ? tagList : ['自制'],
+      likes: 0,
+      comments: 0,
+      isLiked: false,
+      steps: stepList,
+      fitReasons: effectList.length > 0 ? effectList : ['自制食谱'],
+      isUserCreated: true,
+    };
+
+    const updatedRecipes = [...recipes, userRecipe];
+    setRecipes(updatedRecipes);
+
+    // Save user recipes to localStorage
+    const userRecipes = updatedRecipes.filter((r) => r.isUserCreated);
+    localStorage.setItem('userRecipes', JSON.stringify(userRecipes));
+
+    // Reset form and close modal
+    setNewRecipe({
+      title: '',
+      desc: '',
+      emoji: '🍲',
+      cookTime: '',
+      difficulty: '简单',
+      servings: '1人份',
+      ingredients: '',
+      steps: '',
+      effects: '',
+      tags: '',
+    });
+    setShowUpload(false);
+  };
+
   const filtered = recipes.filter((r) => {
-    // 如果显示收藏夹，只显示收藏的食谱
     if (showFavorites && !favorites.includes(r.id)) return false;
     const matchTopic = !activeTopic || r.tags.some((t) => t.includes(activeTopic));
     const matchSearch =
@@ -291,6 +416,8 @@ export default function CirclePage() {
       r.tags.some((t) => t.includes(searchQuery));
     return matchTopic && matchSearch;
   });
+
+  const emojiOptions = ['🍲', '🥗', '🥣', '🍵', '🍮', '🥘', '🍜', '🥙', '🍱', '🫕'];
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-6 space-y-6">
@@ -306,24 +433,34 @@ export default function CirclePage() {
               <p className="text-xs text-muted-foreground">分享自制食谱，让 AI 融入你的专属食养方案</p>
             </div>
           </div>
-          {/* 收藏夹切换 */}
-          <button
-            onClick={() => setShowFavorites(!showFavorites)}
-            className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all duration-200 border',
-              showFavorites
-                ? 'bg-rose-50 text-rose-600 border-rose-200'
-                : 'bg-background text-muted-foreground hover:text-rose-500 border-border'
-            )}
-          >
-            <Heart className={cn('h-4 w-4', showFavorites && 'fill-current')} />
-            <span className="hidden sm:inline">收藏夹</span>
-            {favorites.length > 0 && (
-              <span className="text-xs bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full">
-                {favorites.length}
-              </span>
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            {/* 发布食谱按钮 */}
+            <button
+              onClick={() => setShowUpload(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-primary text-primary-foreground hover:opacity-90 transition-all"
+            >
+              <Upload className="h-4 w-4" />
+              <span className="hidden sm:inline">发布食谱</span>
+            </button>
+            {/* 收藏夹切换 */}
+            <button
+              onClick={() => setShowFavorites(!showFavorites)}
+              className={cn(
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all duration-200 border',
+                showFavorites
+                  ? 'bg-rose-50 text-rose-600 border-rose-200'
+                  : 'bg-background text-muted-foreground hover:text-rose-500 border-border'
+              )}
+            >
+              <Heart className={cn('h-4 w-4', showFavorites && 'fill-current')} />
+              <span className="hidden sm:inline">收藏夹</span>
+              {favorites.length > 0 && (
+                <span className="text-xs bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full">
+                  {favorites.length}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* 搜索 */}
@@ -474,10 +611,10 @@ export default function CirclePage() {
                   onClick={() => toggleLike(recipe.id)}
                   className={cn(
                     'flex items-center gap-0.5 transition-colors',
-                    recipe.isLiked ? 'text-destructive' : 'hover:text-destructive'
+                    likedRecipes.includes(recipe.id) ? 'text-destructive' : 'hover:text-destructive'
                   )}
                 >
-                  <Heart className={cn('h-3 w-3', recipe.isLiked && 'fill-current')} />
+                  <Heart className={cn('h-3 w-3', likedRecipes.includes(recipe.id) && 'fill-current')} />
                   {recipe.likes}
                 </button>
                 <span className="flex items-center gap-0.5">
@@ -489,6 +626,171 @@ export default function CirclePage() {
           </div>
         ))}
       </div>
+      )}
+
+      {/* 发布食谱弹窗 */}
+      {showUpload && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowUpload(false)}
+          />
+          <div className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto bg-card rounded-t-2xl sm:rounded-2xl border border-border shadow-xl">
+            {/* 弹窗头部 */}
+            <div className="sticky top-0 bg-card/95 backdrop-blur-sm z-10 p-4 border-b border-border/40 flex items-center justify-between">
+              <h2 className="font-serif-cn text-base font-bold flex items-center gap-2">
+                <Upload className="h-5 w-5 text-primary" />
+                发布我的食谱
+              </h2>
+              <button
+                onClick={() => setShowUpload(false)}
+                className="p-1.5 rounded-lg hover:bg-muted transition-colors"
+              >
+                <X className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </div>
+
+            <div className="p-4 space-y-4">
+              {/* 食谱名称 */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">食谱名称 *</label>
+                <input
+                  type="text"
+                  value={newRecipe.title}
+                  onChange={(e) => setNewRecipe({ ...newRecipe, title: e.target.value })}
+                  placeholder="例如：红枣枸杞银耳羹"
+                  className="input-warm"
+                />
+              </div>
+
+              {/* 简介 */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">简介</label>
+                <input
+                  type="text"
+                  value={newRecipe.desc}
+                  onChange={(e) => setNewRecipe({ ...newRecipe, desc: e.target.value })}
+                  placeholder="一句话描述这道食谱"
+                  className="input-warm"
+                />
+              </div>
+
+              {/* Emoji 选择 */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">选择图标</label>
+                <div className="flex flex-wrap gap-2">
+                  {emojiOptions.map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => setNewRecipe({ ...newRecipe, emoji })}
+                      className={cn(
+                        'w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all',
+                        newRecipe.emoji === emoji
+                          ? 'bg-primary/10 border-2 border-primary'
+                          : 'bg-muted/50 border border-transparent hover:border-primary/30'
+                      )}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 烹饪信息 */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-foreground">烹饪时间</label>
+                  <input
+                    type="text"
+                    value={newRecipe.cookTime}
+                    onChange={(e) => setNewRecipe({ ...newRecipe, cookTime: e.target.value })}
+                    placeholder="30分钟"
+                    className="input-warm text-xs"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-foreground">难度</label>
+                  <select
+                    value={newRecipe.difficulty}
+                    onChange={(e) => setNewRecipe({ ...newRecipe, difficulty: e.target.value })}
+                    className="input-warm text-xs"
+                  >
+                    <option>简单</option>
+                    <option>中等</option>
+                    <option>困难</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-foreground">份量</label>
+                  <input
+                    type="text"
+                    value={newRecipe.servings}
+                    onChange={(e) => setNewRecipe({ ...newRecipe, servings: e.target.value })}
+                    placeholder="2人份"
+                    className="input-warm text-xs"
+                  />
+                </div>
+              </div>
+
+              {/* 原料 */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">原料清单 *</label>
+                <textarea
+                  value={newRecipe.ingredients}
+                  onChange={(e) => setNewRecipe({ ...newRecipe, ingredients: e.target.value })}
+                  placeholder={"每行一个，格式：食材名, 用量\n例如：\n红枣, 8颗\n枸杞, 10g\n冰糖, 适量"}
+                  className="input-warm min-h-[100px] text-xs"
+                  rows={4}
+                />
+              </div>
+
+              {/* 做法 */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">做法步骤 *</label>
+                <textarea
+                  value={newRecipe.steps}
+                  onChange={(e) => setNewRecipe({ ...newRecipe, steps: e.target.value })}
+                  placeholder={"每行一个步骤\n例如：\n红枣去核，枸杞洗净\n锅中加水，放入红枣大火烧开\n转小火煮20分钟，加入枸杞和冰糖"}
+                  className="input-warm min-h-[100px] text-xs"
+                  rows={4}
+                />
+              </div>
+
+              {/* 功效/效果 */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">功效/效果</label>
+                <textarea
+                  value={newRecipe.effects}
+                  onChange={(e) => setNewRecipe({ ...newRecipe, effects: e.target.value })}
+                  placeholder={"这道食谱的功效，每行一条\n例如：\n补气养血\n美容养颜\n适合体虚者"}
+                  className="input-warm min-h-[80px] text-xs"
+                  rows={3}
+                />
+              </div>
+
+              {/* 标签 */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">标签</label>
+                <input
+                  type="text"
+                  value={newRecipe.tags}
+                  onChange={(e) => setNewRecipe({ ...newRecipe, tags: e.target.value })}
+                  placeholder="用逗号分隔，如：祛湿, 健脾, 早餐"
+                  className="input-warm"
+                />
+              </div>
+
+              {/* 提交按钮 */}
+              <button
+                onClick={handleUploadRecipe}
+                className="w-full py-3 rounded-xl font-medium text-sm bg-primary text-primary-foreground hover:opacity-90 transition-all flex items-center justify-center gap-2"
+              >
+                <Check className="h-4 w-4" />
+                发布食谱
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* 食谱详情弹窗 */}
@@ -529,7 +831,7 @@ export default function CirclePage() {
               <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 space-y-2">
                 <div className="flex items-center gap-1.5">
                   <Sparkles className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium text-primary">为什么适合你</span>
+                  <span className="text-sm font-medium text-primary">功效/效果</span>
                 </div>
                 <ul className="space-y-1">
                   {selectedRecipe.fitReasons.map((reason, i) => (
@@ -603,31 +905,45 @@ export default function CirclePage() {
                 </ol>
               </div>
 
-              {/* 加入食方按钮 */}
-              <button
-                onClick={() => {
-                  addToMealPlan(selectedRecipe.id);
-                  setSelectedRecipe(null);
-                }}
-                className={cn(
-                  'w-full py-3 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all',
-                  addedRecipes.includes(selectedRecipe.id)
-                    ? 'bg-primary/10 text-primary border border-primary/20'
-                    : 'bg-primary text-primary-foreground hover:opacity-90'
-                )}
-              >
-                {addedRecipes.includes(selectedRecipe.id) ? (
-                  <>
-                    <Check className="h-4 w-4" />
-                    已加入今日食方 · AI 将个性化调整
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4" />
-                    加入今日食方 · AI 将个性化调整
-                  </>
-                )}
-              </button>
+              {/* 点赞和加入食方 */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => toggleLike(selectedRecipe.id)}
+                  className={cn(
+                    'flex-1 py-3 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all border',
+                    likedRecipes.includes(selectedRecipe.id)
+                      ? 'bg-destructive/10 text-destructive border-destructive/20'
+                      : 'bg-muted text-muted-foreground hover:text-destructive border-border'
+                  )}
+                >
+                  <Heart className={cn('h-4 w-4', likedRecipes.includes(selectedRecipe.id) && 'fill-current')} />
+                  {likedRecipes.includes(selectedRecipe.id) ? '已点赞' : '点赞'} ({selectedRecipe.likes})
+                </button>
+                <button
+                  onClick={() => {
+                    addToMealPlan(selectedRecipe.id);
+                    setSelectedRecipe(null);
+                  }}
+                  className={cn(
+                    'flex-1 py-3 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all',
+                    addedRecipes.includes(selectedRecipe.id)
+                      ? 'bg-primary/10 text-primary border border-primary/20'
+                      : 'bg-primary text-primary-foreground hover:opacity-90'
+                  )}
+                >
+                  {addedRecipes.includes(selectedRecipe.id) ? (
+                    <>
+                      <Check className="h-4 w-4" />
+                      已加入今日食方
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4" />
+                      加入今日食方
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
