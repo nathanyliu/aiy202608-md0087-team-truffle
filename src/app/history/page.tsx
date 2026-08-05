@@ -334,7 +334,7 @@ export default function HistoryPage() {
           </div>
           <div className="p-2 rounded-lg bg-muted/50">
             <span className="text-muted-foreground">性别</span>
-            <p className="font-medium">{profile.gender === 'male' ? '男' : '女'}</p>
+            <p className="font-medium">{profile.gender}</p>
           </div>
           <div className="p-2 rounded-lg bg-muted/50">
             <span className="text-muted-foreground">身高/体重</span>

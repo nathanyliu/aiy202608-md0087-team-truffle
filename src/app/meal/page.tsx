@@ -64,23 +64,67 @@ const nutritionSummary = {
   fiber: '28g',
 };
 
-// 补充推荐
-const supplements = {
-  nuts: [
+// 补充推荐 - 多个选项，随机选择
+const nutsOptions = [
+  [
     { name: '核桃', amount: '2-3颗', benefit: '补肾健脑', emoji: '🥜' },
     { name: '杏仁', amount: '10颗', benefit: '润肺止咳', emoji: '🌰' },
     { name: '腰果', amount: '8颗', benefit: '健脾益气', emoji: '🥜' },
   ],
-  fruits: [
+  [
+    { name: '夏威夷果', amount: '5颗', benefit: '补充能量', emoji: '🌰' },
+    { name: '开心果', amount: '15颗', benefit: '保护心血管', emoji: '🥜' },
+    { name: '松子', amount: '1小把', benefit: '润肠通便', emoji: '🌲' },
+  ],
+  [
+    { name: '碧根果', amount: '4-5颗', benefit: '补脑益智', emoji: '🌰' },
+    { name: '榛子', amount: '8颗', benefit: '补充维生素E', emoji: '🥜' },
+    { name: '南瓜子', amount: '1小把', benefit: '保护前列腺', emoji: '🎃' },
+  ],
+];
+
+const fruitsOptions = [
+  [
     { name: '蓝莓', amount: '50g', benefit: '抗氧化·明目', emoji: '🫐' },
     { name: '猕猴桃', amount: '1个', benefit: '维C之王·清热', emoji: '🥝' },
     { name: '樱桃', amount: '10颗', benefit: '补铁·养颜', emoji: '🍒' },
   ],
-  drinks: [
+  [
+    { name: '苹果', amount: '半个', benefit: '促进消化', emoji: '🍎' },
+    { name: '香蕉', amount: '1根', benefit: '补充钾元素', emoji: '🍌' },
+    { name: '橙子', amount: '1个', benefit: '增强免疫力', emoji: '🍊' },
+  ],
+  [
+    { name: '草莓', amount: '5颗', benefit: '美白养颜', emoji: '🍓' },
+    { name: '葡萄', amount: '1小串', benefit: '抗氧化', emoji: '🍇' },
+    { name: '梨', amount: '半个', benefit: '润肺止咳', emoji: '🍐' },
+  ],
+];
+
+const drinksOptions = [
+  [
     { name: '红枣桂圆茶', amount: '1杯', benefit: '补血安神', emoji: '🍵' },
     { name: '绿豆汤', amount: '1碗', benefit: '清热解暑', emoji: '🥤' },
     { name: '酸梅汤', amount: '1杯', benefit: '生津止渴', emoji: '🧃' },
   ],
+  [
+    { name: '枸杞菊花茶', amount: '1杯', benefit: '清肝明目', emoji: '🍵' },
+    { name: '柠檬水', amount: '1杯', benefit: '补充维C', emoji: '🍋' },
+    { name: '蜂蜜水', amount: '1杯', benefit: '润肠通便', emoji: '🍯' },
+  ],
+  [
+    { name: '玫瑰花茶', amount: '1杯', benefit: '疏肝解郁', emoji: '🌹' },
+    { name: '山楂茶', amount: '1杯', benefit: '消食化积', emoji: '🫖' },
+    { name: '豆浆', amount: '1杯', benefit: '补充植物蛋白', emoji: '🥛' },
+  ],
+];
+
+// 根据当前日期生成固定的随机选择（同一天显示相同内容）
+const daySeed = new Date().getDate();
+const supplements = {
+  nuts: nutsOptions[daySeed % nutsOptions.length],
+  fruits: fruitsOptions[daySeed % fruitsOptions.length],
+  drinks: drinksOptions[daySeed % drinksOptions.length],
 };
 
 // 用户健康档案类型
