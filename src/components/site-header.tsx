@@ -3,15 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Leaf, Home, UtensilsCrossed, TrendingUp, ShoppingBag, MapPin, MessageCircle } from 'lucide-react';
+import { Leaf, Home, UtensilsCrossed, TrendingUp, MapPin, Users } from 'lucide-react';
 
 const navItems = [
   { href: '/', label: '首页', icon: Home },
   { href: '/meal', label: '今日食方', icon: UtensilsCrossed },
   { href: '/history', label: '影响因子', icon: TrendingUp },
-  { href: '/shop', label: '严选商城', icon: ShoppingBag },
   { href: '/map', label: '食养地图', icon: MapPin },
-  { href: '/circle', label: '吃货微博', icon: MessageCircle },
+  { href: '/circle', label: '食方社区', icon: Users },
 ];
 
 export function SiteHeader() {

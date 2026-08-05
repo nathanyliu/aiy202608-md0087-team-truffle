@@ -21,11 +21,10 @@ src/
 │   ├── layout.tsx          # 根布局（含导航）
 │   ├── page.tsx            # 首页（健康档案 + 今日反馈 + 舌像上传）
 │   ├── globals.css         # 全局样式 + 食养主题 tokens
-│   ├── meal/page.tsx       # 今日食方（每日餐单推荐）
+│   ├── meal/page.tsx       # 今日食方（每日餐单 + 营养分析 + 补充推荐）
 │   ├── history/page.tsx    # 影响因子（健康趋势追踪）
-│   ├── shop/page.tsx       # 严选商城（食材选购）
 │   ├── map/page.tsx        # 食养地图（产地溯源）
-│   └── circle/page.tsx     # 吃货微博（社区动态）
+│   └── circle/page.tsx     # 食方社区（用户分享食谱 + 加入今日食方）
 ├── components/
 │   ├── site-header.tsx     # 全局导航头
 │   └── ui/                 # shadcn/ui 组件库

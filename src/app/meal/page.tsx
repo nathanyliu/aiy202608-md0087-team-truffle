@@ -15,6 +15,14 @@ import {
   Clock,
   ChefHat,
   Star,
+  Sparkles,
+  Heart,
+  Activity,
+  Brain,
+  Shield,
+  TrendingUp,
+  Cherry,
+  CupSoda,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -93,8 +101,76 @@ const nutritionSummary = {
   fiber: '28g',
 };
 
+// 补充推荐
+const supplements = {
+  nuts: [
+    { name: '核桃', amount: '2-3颗', benefit: '补肾健脑', emoji: '🥜' },
+    { name: '杏仁', amount: '10颗', benefit: '润肺止咳', emoji: '🌰' },
+    { name: '腰果', amount: '8颗', benefit: '健脾益气', emoji: '🥜' },
+  ],
+  fruits: [
+    { name: '蓝莓', amount: '50g', benefit: '抗氧化·明目', emoji: '🫐' },
+    { name: '猕猴桃', amount: '1个', benefit: '维C之王·清热', emoji: '🥝' },
+    { name: '樱桃', amount: '10颗', benefit: '补铁·养颜', emoji: '🍒' },
+  ],
+  drinks: [
+    { name: '红枣桂圆茶', amount: '1杯', benefit: '补血安神', emoji: '🍵' },
+    { name: '绿豆汤', amount: '1碗', benefit: '清热解暑', emoji: '🥤' },
+    { name: '酸梅汤', amount: '1杯', benefit: '生津止渴', emoji: '🧃' },
+  ],
+};
+
+// 个性化分析数据
+const personalAnalysis = [
+  {
+    icon: Heart,
+    title: '体质匹配',
+    color: 'text-accent',
+    bgColor: 'bg-accent/10',
+    items: [
+      '当前大暑时节，湿热交蒸，你的消化反馈显示脾胃运化偏弱',
+      '今日食谱以健脾祛湿为主线，山药、薏米、茯苓等食材针对性调理',
+      '午餐清蒸鲈鱼提供优质蛋白，低脂不增加脾胃负担',
+    ],
+  },
+  {
+    icon: Activity,
+    title: '运动协同',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    items: [
+      '今日训练安排为休息日，热量摄入适度下调至1445kcal',
+      '蛋白质分配均匀，每餐15-25g，利于肌肉维持与修复',
+      '晚餐减少碳水比例，搭配白灼虾补充锌元素促进恢复',
+    ],
+  },
+  {
+    icon: Brain,
+    title: '情绪与睡眠',
+    color: 'text-chart-4',
+    bgColor: 'bg-chart-4/10',
+    items: [
+      '近期睡眠质量波动，晚餐加入莲子安神食材辅助改善',
+      '下午补充坚果中的镁元素有助于缓解焦虑情绪',
+      '枸杞菊花茶清肝明目，缓解午后精力下降',
+    ],
+  },
+  {
+    icon: Shield,
+    title: '节气防护',
+    color: 'text-chart-3',
+    bgColor: 'bg-chart-3/10',
+    items: [
+      '大暑第14天，距立秋仅3天，需防秋前最后一波暑湿',
+      '全天食谱避免寒凉，以温平性食材为主保护阳气',
+      '姜枣茶建议晨起饮用，借姜之温散驱空调房寒湿',
+    ],
+  },
+];
+
 export default function MealPage() {
   const [expandedSlot, setExpandedSlot] = useState<number | null>(0);
+  const [expandedAnalysis, setExpandedAnalysis] = useState<number | null>(0);
 
   const toggleSlot = (index: number) => {
     setExpandedSlot(expandedSlot === index ? null : index);
@@ -111,7 +187,7 @@ export default function MealPage() {
             </div>
             <div>
               <h1 className="font-serif-cn text-xl font-bold">今日食方</h1>
-              <p className="text-xs text-muted-foreground">基于你的体质与节气定制</p>
+              <p className="text-xs text-muted-foreground">基于你的体质与健康数据个性化生成</p>
             </div>
           </div>
           <div className="badge-season">
@@ -136,6 +212,62 @@ export default function MealPage() {
             <p className="text-xs text-muted-foreground">{item.label}</p>
           </div>
         ))}
+      </div>
+
+      {/* 个性化营养分析 */}
+      <div className="card-warm p-5 space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+            <TrendingUp className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <h2 className="font-serif-cn text-base font-bold">营养分析</h2>
+            <p className="text-xs text-muted-foreground">基于你的健康档案与今日状态生成</p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {personalAnalysis.map((analysis, index) => {
+            const Icon = analysis.icon;
+            const isExpanded = expandedAnalysis === index;
+            return (
+              <div
+                key={analysis.title}
+                className={cn(
+                  'rounded-xl border transition-all duration-200',
+                  isExpanded ? 'border-border/60 bg-muted/20' : 'border-border/30'
+                )}
+              >
+                <button
+                  onClick={() => setExpandedAnalysis(isExpanded ? null : index)}
+                  className="w-full p-3 flex items-center justify-between text-left"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className={cn('flex h-7 w-7 items-center justify-center rounded-lg', analysis.bgColor)}>
+                      <Icon className={cn('h-3.5 w-3.5', analysis.color)} />
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{analysis.title}</span>
+                  </div>
+                  {isExpanded ? (
+                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </button>
+                {isExpanded && (
+                  <div className="px-3 pb-3 space-y-1.5">
+                    {analysis.items.map((item, i) => (
+                      <div key={i} className="flex items-start gap-2 text-xs text-foreground/80">
+                        <Sparkles className="h-3 w-3 text-primary mt-0.5 shrink-0" />
+                        <span className="leading-relaxed">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* 餐食详情 */}
@@ -205,6 +337,65 @@ export default function MealPage() {
             </div>
           );
         })}
+      </div>
+
+      {/* 补充推荐：坚果 · 水果 · 饮品 */}
+      <div className="card-warm p-5 space-y-4">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-chart-3" />
+          <h2 className="font-serif-cn text-base font-bold">每日补充推荐</h2>
+        </div>
+
+        {/* 坚果 */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
+            <span className="text-base">🥜</span> 坚果 · 每日一把
+          </h3>
+          <div className="grid grid-cols-3 gap-2">
+            {supplements.nuts.map((item) => (
+              <div key={item.name} className="p-2.5 rounded-lg bg-muted/20 text-center">
+                <span className="text-xl">{item.emoji}</span>
+                <p className="text-xs font-medium text-foreground mt-1">{item.name}</p>
+                <p className="text-xs text-muted-foreground">{item.amount}</p>
+                <p className="text-xs text-primary/70 mt-0.5">{item.benefit}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 水果 */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
+            <Cherry className="h-4 w-4 text-chart-5" /> 时令水果
+          </h3>
+          <div className="grid grid-cols-3 gap-2">
+            {supplements.fruits.map((item) => (
+              <div key={item.name} className="p-2.5 rounded-lg bg-muted/20 text-center">
+                <span className="text-xl">{item.emoji}</span>
+                <p className="text-xs font-medium text-foreground mt-1">{item.name}</p>
+                <p className="text-xs text-muted-foreground">{item.amount}</p>
+                <p className="text-xs text-primary/70 mt-0.5">{item.benefit}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 饮品 */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
+            <CupSoda className="h-4 w-4 text-chart-4" /> 养生饮品
+          </h3>
+          <div className="grid grid-cols-3 gap-2">
+            {supplements.drinks.map((item) => (
+              <div key={item.name} className="p-2.5 rounded-lg bg-muted/20 text-center">
+                <span className="text-xl">{item.emoji}</span>
+                <p className="text-xs font-medium text-foreground mt-1">{item.name}</p>
+                <p className="text-xs text-muted-foreground">{item.amount}</p>
+                <p className="text-xs text-primary/70 mt-0.5">{item.benefit}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
