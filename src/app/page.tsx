@@ -495,7 +495,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="flex items-center gap-4 text-sm">
-          <span className="text-muted-foreground">
+          <span className="text-muted-foreground" suppressHydrationWarning>
             {info.time} {info.date} · {info.weekDay}
           </span>
           <span className="badge-season">
