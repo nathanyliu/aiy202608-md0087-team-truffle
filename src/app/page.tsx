@@ -10,7 +10,6 @@ import {
   Brain,
   Heart,
   Activity,
-  Camera,
   ChevronRight,
   Sparkles,
   Plus,
@@ -313,7 +312,6 @@ export default function HomePage() {
   const [mood, setMood] = useState('一般');
   const [todayTrain, setTodayTrain] = useState('休息日');
   const [notes, setNotes] = useState('');
-  const [tongueImage, setTongueImage] = useState<string | null>(null);
 
   // 饮食偏好
   const [selectedFoods, setSelectedFoods] = useState<string[]>([]);
@@ -467,17 +465,6 @@ export default function HomePage() {
   };
 
   const conflicts = detectConflicts();
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setTongueImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 space-y-6">
@@ -716,56 +703,6 @@ export default function HomePage() {
                 className="input-warm resize-none"
               />
             </div>
-          </div>
-
-          {/* 舌像上传 */}
-          <div className="card-warm p-5 space-y-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Camera className="h-5 w-5 text-accent" />
-              <div>
-                <h2 className="font-serif-cn text-base font-bold">今日舌像</h2>
-                <p className="text-xs text-muted-foreground">
-                  辅助判断湿热/体寒/气血，影响今日推荐
-                </p>
-              </div>
-            </div>
-
-            {tongueImage ? (
-              <div className="relative group">
-                <img
-                  src={tongueImage}
-                  alt="舌像照片"
-                  className="w-full h-48 object-cover rounded-xl border border-border"
-                />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
-                  <label className="px-4 py-2 bg-white/90 rounded-lg text-sm font-medium text-foreground cursor-pointer hover:bg-white transition-colors">
-                    重新上传
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-              </div>
-            ) : (
-              <label className="flex flex-col items-center justify-center h-48 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/30 hover:bg-primary/[0.02] transition-all duration-200">
-                <Camera className="h-8 w-8 text-muted-foreground/50 mb-2" />
-                <span className="text-sm text-muted-foreground">
-                  上传今日舌面照片
-                </span>
-                <span className="text-xs text-muted-foreground/60 mt-1">
-                  自然光、舌体自然伸出、对焦于舌头
-                </span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </label>
-            )}
           </div>
         </div>
       </div>

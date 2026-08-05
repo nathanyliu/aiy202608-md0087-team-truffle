@@ -55,290 +55,6 @@ interface MealSlot {
   tip: string;
 }
 
-const mealPlan: MealSlot[] = [
-  {
-    type: '早餐',
-    time: '07:00 - 08:00',
-    icon: Sun,
-    meals: [
-      {
-        name: '红枣小米粥',
-        amount: '1碗 (250ml)',
-        calories: '180kcal',
-        tags: ['健脾', '养胃'],
-        recipe: {
-          ingredients: [
-            { name: '小米', amount: '80g' },
-            { name: '红枣', amount: '5颗' },
-            { name: '清水', amount: '500ml' },
-            { name: '冰糖', amount: '适量（可选）' },
-          ],
-          steps: [
-            { step: 1, desc: '小米淘洗干净，红枣洗净去核' },
-            { step: 2, desc: '锅中加水烧开，放入小米大火煮沸' },
-            { step: 3, desc: '转小火慢煮20分钟，加入红枣继续煮10分钟' },
-            { step: 4, desc: '粥变得浓稠即可，喜甜可加少许冰糖' },
-          ],
-          tips: '小米提前浸泡30分钟可缩短煮制时间，粥更绵密',
-        },
-      },
-      {
-        name: '水煮鸡蛋',
-        amount: '1个',
-        calories: '75kcal',
-        tags: ['蛋白质'],
-        recipe: {
-          ingredients: [
-            { name: '鸡蛋', amount: '1个' },
-            { name: '清水', amount: '适量' },
-          ],
-          steps: [
-            { step: 1, desc: '鸡蛋洗净，放入锅中加冷水没过鸡蛋' },
-            { step: 2, desc: '大火煮开后转中小火煮8分钟' },
-            { step: 3, desc: '关火后放入冷水中浸泡2分钟，便于剥壳' },
-          ],
-          tips: '溏心蛋煮6分钟，全熟蛋煮8-10分钟',
-        },
-      },
-      {
-        name: '凉拌黄瓜',
-        amount: '1小碟',
-        calories: '30kcal',
-        tags: ['清热', '利水'],
-        recipe: {
-          ingredients: [
-            { name: '黄瓜', amount: '1根' },
-            { name: '蒜末', amount: '2瓣' },
-            { name: '生抽', amount: '1勺' },
-            { name: '香醋', amount: '1勺' },
-            { name: '香油', amount: '少许' },
-          ],
-          steps: [
-            { step: 1, desc: '黄瓜洗净，拍碎后切成小段' },
-            { step: 2, desc: '蒜切末，与生抽、香醋、香油调成酱汁' },
-            { step: 3, desc: '将酱汁淋在黄瓜上，拌匀即可' },
-          ],
-          tips: '拍黄瓜比切黄瓜更入味，冷藏后口感更佳',
-        },
-      },
-    ],
-    totalCalories: '285kcal',
-    tip: '晨起先饮一杯温水，助脾胃苏醒',
-  },
-  {
-    type: '午餐',
-    time: '11:30 - 12:30',
-    icon: ChefHat,
-    meals: [
-      {
-        name: '山药排骨汤',
-        amount: '1碗 (300ml)',
-        calories: '320kcal',
-        tags: ['补气', '强筋'],
-        recipe: {
-          ingredients: [
-            { name: '排骨', amount: '300g' },
-            { name: '山药', amount: '200g' },
-            { name: '姜片', amount: '3片' },
-            { name: '枸杞', amount: '10粒' },
-            { name: '盐', amount: '适量' },
-          ],
-          steps: [
-            { step: 1, desc: '排骨冷水下锅焯水，撇去浮沫后捞出洗净' },
-            { step: 2, desc: '山药去皮切滚刀块，泡水防氧化' },
-            { step: 3, desc: '砂锅加清水，放入排骨、姜片大火烧开' },
-            { step: 4, desc: '转小火炖40分钟，加入山药继续炖20分钟' },
-            { step: 5, desc: '出锅前加入枸杞，加盐调味即可' },
-          ],
-          tips: '山药后放可保持口感，过早加入易煮烂',
-        },
-      },
-      {
-        name: '清蒸鲈鱼',
-        amount: '150g',
-        calories: '180kcal',
-        tags: ['高蛋白', '低脂'],
-        recipe: {
-          ingredients: [
-            { name: '鲈鱼', amount: '1条（约400g）' },
-            { name: '葱丝', amount: '适量' },
-            { name: '姜丝', amount: '适量' },
-            { name: '蒸鱼豉油', amount: '2勺' },
-            { name: '料酒', amount: '1勺' },
-          ],
-          steps: [
-            { step: 1, desc: '鲈鱼处理干净，两面划几刀，抹上料酒和少许盐腌10分钟' },
-            { step: 2, desc: '鱼身下垫姜片，水开后上锅大火蒸8分钟' },
-            { step: 3, desc: '蒸好后倒掉盘中汤汁，铺上葱丝姜丝' },
-            { step: 4, desc: '淋上蒸鱼豉油，浇上热油激香即可' },
-          ],
-          tips: '蒸鱼时间不宜过长，8分钟刚好保持鱼肉嫩滑',
-        },
-      },
-      {
-        name: '蒜蓉西兰花',
-        amount: '200g',
-        calories: '85kcal',
-        tags: ['抗氧化', '膳食纤维'],
-        recipe: {
-          ingredients: [
-            { name: '西兰花', amount: '200g' },
-            { name: '蒜末', amount: '3瓣' },
-            { name: '盐', amount: '适量' },
-            { name: '食用油', amount: '1勺' },
-          ],
-          steps: [
-            { step: 1, desc: '西兰花切小朵，淡盐水浸泡10分钟后洗净' },
-            { step: 2, desc: '锅中烧水，加少许盐，西兰花焯水1分钟捞出' },
-            { step: 3, desc: '热锅凉油，爆香蒜末' },
-            { step: 4, desc: '放入西兰花快速翻炒，加盐调味即可出锅' },
-          ],
-          tips: '焯水可去除草酸，保持翠绿色泽',
-        },
-      },
-      {
-        name: '糙米饭',
-        amount: '1碗 (150g)',
-        calories: '170kcal',
-        tags: ['粗粮', 'B族维生素'],
-        recipe: {
-          ingredients: [
-            { name: '糙米', amount: '100g' },
-            { name: '清水', amount: '200ml' },
-          ],
-          steps: [
-            { step: 1, desc: '糙米提前浸泡2小时（或冷藏浸泡过夜）' },
-            { step: 2, desc: '将泡好的糙米放入电饭煲，加水' },
-            { step: 3, desc: '选择糙米模式或煮饭模式，煮好后焖10分钟' },
-          ],
-          tips: '糙米提前浸泡可缩短煮制时间，口感更软糯',
-        },
-      },
-    ],
-    totalCalories: '755kcal',
-    tip: '午餐宜饱，细嚼慢咽助消化',
-  },
-  {
-    type: '下午茶',
-    time: '15:00 - 15:30',
-    icon: Coffee,
-    meals: [
-      {
-        name: '枸杞菊花茶',
-        amount: '1杯 (200ml)',
-        calories: '15kcal',
-        tags: ['明目', '清肝'],
-        recipe: {
-          ingredients: [
-            { name: '菊花', amount: '5朵' },
-            { name: '枸杞', amount: '10粒' },
-            { name: '沸水', amount: '200ml' },
-          ],
-          steps: [
-            { step: 1, desc: '菊花、枸杞用清水冲洗一遍' },
-            { step: 2, desc: '放入杯中，冲入沸水' },
-            { step: 3, desc: '盖上杯盖焖5分钟即可饮用' },
-          ],
-          tips: '可反复冲泡2-3次，味淡后更换新材料',
-        },
-      },
-      {
-        name: '原味坚果',
-        amount: '一小把 (20g)',
-        calories: '120kcal',
-        tags: ['好脂肪', '维生素E'],
-        recipe: {
-          ingredients: [
-            { name: '核桃', amount: '2颗' },
-            { name: '杏仁', amount: '5粒' },
-            { name: '腰果', amount: '3粒' },
-          ],
-          steps: [
-            { step: 1, desc: '坚果去壳，混合均匀' },
-            { step: 2, desc: '可直接食用，建议细嚼慢咽' },
-          ],
-          tips: '选择原味无盐坚果，每日摄入量控制在20-30g',
-        },
-      },
-    ],
-    totalCalories: '135kcal',
-    tip: '午后小憩15分钟，恢复精力',
-  },
-  {
-    type: '晚餐',
-    time: '18:00 - 19:00',
-    icon: Moon,
-    meals: [
-      {
-        name: '番茄豆腐汤',
-        amount: '1碗 (250ml)',
-        calories: '120kcal',
-        tags: ['清热', '补钙'],
-        recipe: {
-          ingredients: [
-            { name: '番茄', amount: '1个' },
-            { name: '嫩豆腐', amount: '150g' },
-            { name: '葱花', amount: '适量' },
-            { name: '盐', amount: '适量' },
-            { name: '香油', amount: '少许' },
-          ],
-          steps: [
-            { step: 1, desc: '番茄洗净切块，豆腐切小块' },
-            { step: 2, desc: '锅中加少许油，放入番茄炒出汁' },
-            { step: 3, desc: '加入适量清水烧开，放入豆腐' },
-            { step: 4, desc: '小火煮5分钟，加盐调味，撒葱花淋香油即可' },
-          ],
-          tips: '番茄先炒可释放更多番茄红素',
-        },
-      },
-      {
-        name: '白灼虾',
-        amount: '100g',
-        calories: '90kcal',
-        tags: ['高蛋白', '锌'],
-        recipe: {
-          ingredients: [
-            { name: '鲜虾', amount: '150g' },
-            { name: '姜片', amount: '2片' },
-            { name: '葱段', amount: '2根' },
-            { name: '料酒', amount: '1勺' },
-            { name: '蘸料', amount: '生抽+姜末' },
-          ],
-          steps: [
-            { step: 1, desc: '鲜虾剪去虾须，挑去虾线' },
-            { step: 2, desc: '锅中加水，放入姜片、葱段、料酒烧开' },
-            { step: 3, desc: '放入虾，煮至变红卷曲（约2分钟）捞出' },
-            { step: 4, desc: '调蘸料：生抽+姜末，蘸食即可' },
-          ],
-          tips: '虾不宜煮太久，变红即熟，保持鲜嫩口感',
-        },
-      },
-      {
-        name: '清炒时蔬',
-        amount: '200g',
-        calories: '60kcal',
-        tags: ['膳食纤维', '维生素'],
-        recipe: {
-          ingredients: [
-            { name: '时令蔬菜', amount: '200g（如菜心、油麦菜）' },
-            { name: '蒜末', amount: '2瓣' },
-            { name: '盐', amount: '适量' },
-            { name: '食用油', amount: '1勺' },
-          ],
-          steps: [
-            { step: 1, desc: '蔬菜洗净，切段沥干水分' },
-            { step: 2, desc: '热锅凉油，爆香蒜末' },
-            { step: 3, desc: '放入蔬菜大火快速翻炒' },
-            { step: 4, desc: '加盐调味，炒至断生即可出锅' },
-          ],
-          tips: '大火快炒可保留更多维生素和脆嫩口感',
-        },
-      },
-    ],
-    totalCalories: '270kcal',
-    tip: '晚餐宜清淡，七分饱即可',
-  },
-];
 
 const nutritionSummary = {
   totalCalories: '1445kcal',
@@ -510,11 +226,118 @@ function getPersonalAnalysis(profile: UserProfile | null) {
   return analysis;
 }
 
+// 生成随机食谱的函数
+function generateRandomMealPlan(): MealSlot[] {
+  // 早餐选项池
+  const breakfastOptions = [
+    [
+      { name: '红枣小米粥', amount: '1碗 (250ml)', calories: '180kcal', tags: ['健脾', '养胃'], recipe: { ingredients: [{ name: '小米', amount: '80g' }, { name: '红枣', amount: '5颗' }, { name: '清水', amount: '500ml' }], steps: [{ step: 1, desc: '小米淘洗干净，红枣洗净去核' }, { step: 2, desc: '锅中加水烧开，放入小米大火煮沸' }, { step: 3, desc: '转小火慢煮20分钟，加入红枣继续煮10分钟' }], tips: '小米提前浸泡30分钟可缩短煮制时间' } },
+      { name: '水煮鸡蛋', amount: '1个', calories: '75kcal', tags: ['蛋白质'], recipe: { ingredients: [{ name: '鸡蛋', amount: '1个' }, { name: '清水', amount: '适量' }], steps: [{ step: 1, desc: '鸡蛋洗净，冷水下锅' }, { step: 2, desc: '大火煮开后转中小火煮8分钟' }, { step: 3, desc: '关火后放入冷水中浸泡' }], tips: '溏心蛋煮6分钟，全熟蛋煮8-10分钟' } },
+      { name: '凉拌黄瓜', amount: '1小碟', calories: '30kcal', tags: ['清热', '利水'], recipe: { ingredients: [{ name: '黄瓜', amount: '1根' }, { name: '蒜末', amount: '2瓣' }, { name: '生抽', amount: '1勺' }], steps: [{ step: 1, desc: '黄瓜洗净拍碎切段' }, { step: 2, desc: '蒜末与生抽调成酱汁' }, { step: 3, desc: '酱汁淋在黄瓜上拌匀' }], tips: '拍黄瓜比切黄瓜更入味' } },
+    ],
+    [
+      { name: '燕麦牛奶', amount: '1碗', calories: '220kcal', tags: ['高纤', '补钙'], recipe: { ingredients: [{ name: '燕麦片', amount: '40g' }, { name: '牛奶', amount: '250ml' }, { name: '蜂蜜', amount: '1勺' }], steps: [{ step: 1, desc: '牛奶倒入锅中加热' }, { step: 2, desc: '加入燕麦片搅拌' }, { step: 3, desc: '小火煮3分钟至浓稠' }], tips: '即食燕麦可直接用热牛奶冲泡' } },
+      { name: '全麦吐司', amount: '2片', calories: '160kcal', tags: ['碳水', '膳食纤维'], recipe: { ingredients: [{ name: '全麦吐司', amount: '2片' }, { name: '牛油果', amount: '半个' }, { name: '鸡蛋', amount: '1个' }], steps: [{ step: 1, desc: '吐司放入烤面包机烤至金黄' }, { step: 2, desc: '牛油果切片铺在吐司上' }, { step: 3, desc: '煎一个荷包蛋放在上面' }], tips: '可撒少许黑胡椒和海盐调味' } },
+      { name: '蓝莓酸奶', amount: '1杯', calories: '120kcal', tags: ['益生菌', '抗氧化'], recipe: { ingredients: [{ name: '希腊酸奶', amount: '150g' }, { name: '蓝莓', amount: '30g' }, { name: '燕麦', amount: '10g' }], steps: [{ step: 1, desc: '酸奶倒入碗中' }, { step: 2, desc: '蓝莓洗净铺在酸奶上' }, { step: 3, desc: '撒上燕麦增加口感' }], tips: '选择无糖酸奶更健康' } },
+    ],
+    [
+      { name: '豆浆油条', amount: '1套', calories: '350kcal', tags: ['传统', '饱腹'], recipe: { ingredients: [{ name: '豆浆', amount: '300ml' }, { name: '油条', amount: '1根' }], steps: [{ step: 1, desc: '豆浆加热至温热' }, { step: 2, desc: '油条可微波加热10秒' }], tips: '豆浆可自制或选择无糖豆浆' } },
+      { name: '紫薯粥', amount: '1碗', calories: '200kcal', tags: ['花青素', '膳食纤维'], recipe: { ingredients: [{ name: '紫薯', amount: '100g' }, { name: '大米', amount: '50g' }, { name: '清水', amount: '500ml' }], steps: [{ step: 1, desc: '紫薯去皮切小块' }, { step: 2, desc: '大米淘洗后与紫薯一起入锅' }, { step: 3, desc: '大火烧开转小火煮30分钟' }], tips: '紫薯富含花青素，抗氧化效果好' } },
+      { name: '蒸南瓜', amount: '1块', calories: '80kcal', tags: ['低卡', '护眼'], recipe: { ingredients: [{ name: '南瓜', amount: '200g' }], steps: [{ step: 1, desc: '南瓜去皮去籽切块' }, { step: 2, desc: '放入蒸锅大火蒸15分钟' }], tips: '南瓜富含β-胡萝卜素，保护视力' } },
+    ],
+  ];
+
+  // 午餐选项池
+  const lunchOptions = [
+    [
+      { name: '山药排骨汤', amount: '1碗 (300ml)', calories: '320kcal', tags: ['补气', '强筋'], recipe: { ingredients: [{ name: '排骨', amount: '300g' }, { name: '山药', amount: '200g' }, { name: '姜片', amount: '3片' }, { name: '枸杞', amount: '10粒' }], steps: [{ step: 1, desc: '排骨焯水去血沫' }, { step: 2, desc: '山药去皮切块' }, { step: 3, desc: '所有材料入砂锅，加水大火烧开' }, { step: 4, desc: '转小火炖1.5小时，加盐调味' }], tips: '山药后放可保持口感' } },
+      { name: '清蒸鲈鱼', amount: '1条', calories: '280kcal', tags: ['优质蛋白', '低脂'], recipe: { ingredients: [{ name: '鲈鱼', amount: '1条' }, { name: '葱姜', amount: '适量' }, { name: '蒸鱼豉油', amount: '2勺' }], steps: [{ step: 1, desc: '鲈鱼处理干净，两面划刀' }, { step: 2, desc: '鱼身铺上葱姜丝' }, { step: 3, desc: '大火蒸8-10分钟' }, { step: 4, desc: '倒掉蒸出的水，淋蒸鱼豉油' }], tips: '蒸的时间不宜过长，肉质更嫩' } },
+      { name: '蒜蓉西兰花', amount: '1份', calories: '120kcal', tags: ['抗氧化', '高纤'], recipe: { ingredients: [{ name: '西兰花', amount: '200g' }, { name: '蒜末', amount: '3瓣' }], steps: [{ step: 1, desc: '西兰花切小朵，焯水1分钟' }, { step: 2, desc: '热锅凉油，爆香蒜末' }, { step: 3, desc: '放入西兰花翻炒，加盐调味' }], tips: '焯水可保持翠绿色泽' } },
+      { name: '糙米饭', amount: '1碗', calories: '220kcal', tags: ['粗粮', '膳食纤维'], recipe: { ingredients: [{ name: '糙米', amount: '100g' }, { name: '清水', amount: '适量' }], steps: [{ step: 1, desc: '糙米提前浸泡2小时' }, { step: 2, desc: '放入电饭煲，加水煮熟' }], tips: '糙米与白米1:1混合口感更好' } },
+    ],
+    [
+      { name: '番茄牛肉汤', amount: '1碗', calories: '350kcal', tags: ['补铁', '高蛋白'], recipe: { ingredients: [{ name: '牛腩', amount: '250g' }, { name: '番茄', amount: '2个' }, { name: '土豆', amount: '1个' }], steps: [{ step: 1, desc: '牛腩切块焯水' }, { step: 2, desc: '番茄切块，土豆切块' }, { step: 3, desc: '所有材料入锅，加水炖1.5小时' }], tips: '番茄后放可保持口感' } },
+      { name: '宫保鸡丁', amount: '1份', calories: '380kcal', tags: ['下饭', '高蛋白'], recipe: { ingredients: [{ name: '鸡胸肉', amount: '200g' }, { name: '花生米', amount: '30g' }, { name: '干辣椒', amount: '5个' }], steps: [{ step: 1, desc: '鸡胸肉切丁，用料酒腌制' }, { step: 2, desc: '热锅凉油，炒香干辣椒' }, { step: 3, desc: '放入鸡丁翻炒至变色' }, { step: 4, desc: '加入花生米和调味汁翻炒均匀' }], tips: '鸡丁腌制后更嫩滑' } },
+      { name: '清炒时蔬', amount: '1份', calories: '80kcal', tags: ['维生素', '低卡'], recipe: { ingredients: [{ name: '时令蔬菜', amount: '200g' }, { name: '蒜末', amount: '2瓣' }], steps: [{ step: 1, desc: '蔬菜洗净切段' }, { step: 2, desc: '热锅爆香蒜末' }, { step: 3, desc: '放入蔬菜快速翻炒' }], tips: '大火快炒保持蔬菜脆嫩' } },
+      { name: '杂粮饭', amount: '1碗', calories: '200kcal', tags: ['粗粮', '营养均衡'], recipe: { ingredients: [{ name: '糙米', amount: '30g' }, { name: '小米', amount: '30g' }, { name: '红豆', amount: '20g' }, { name: '薏米', amount: '20g' }], steps: [{ step: 1, desc: '杂粮提前浸泡4小时' }, { step: 2, desc: '放入电饭煲煮熟' }], tips: '杂粮比例可按喜好调整' } },
+    ],
+  ];
+
+  // 晚餐选项池
+  const dinnerOptions = [
+    [
+      { name: '番茄豆腐汤', amount: '1碗', calories: '150kcal', tags: ['清淡', '高蛋白'], recipe: { ingredients: [{ name: '番茄', amount: '1个' }, { name: '嫩豆腐', amount: '200g' }, { name: '葱花', amount: '适量' }], steps: [{ step: 1, desc: '番茄切块，豆腐切小块' }, { step: 2, desc: '锅中加水烧开，放入番茄' }, { step: 3, desc: '番茄软烂后加入豆腐' }, { step: 4, desc: '煮5分钟，加盐调味，撒葱花' }], tips: '豆腐后放可保持完整' } },
+      { name: '白灼虾', amount: '1份', calories: '180kcal', tags: ['高蛋白', '低脂'], recipe: { ingredients: [{ name: '鲜虾', amount: '200g' }, { name: '姜片', amount: '3片' }, { name: '料酒', amount: '1勺' }], steps: [{ step: 1, desc: '虾洗净，剪去虾须' }, { step: 2, desc: '锅中水烧开，加姜片料酒' }, { step: 3, desc: '放入虾煮至变红（约3分钟）' }, { step: 4, desc: '捞出过冷水，蘸料食用' }], tips: '虾煮的时间不宜过长' } },
+      { name: '清炒时蔬', amount: '1份', calories: '80kcal', tags: ['维生素', '低卡'], recipe: { ingredients: [{ name: '时令蔬菜', amount: '200g' }, { name: '蒜末', amount: '2瓣' }], steps: [{ step: 1, desc: '蔬菜洗净切段' }, { step: 2, desc: '热锅爆香蒜末' }, { step: 3, desc: '放入蔬菜快速翻炒' }], tips: '大火快炒保持蔬菜脆嫩' } },
+    ],
+    [
+      { name: '紫菜蛋花汤', amount: '1碗', calories: '100kcal', tags: ['补碘', '清淡'], recipe: { ingredients: [{ name: '紫菜', amount: '10g' }, { name: '鸡蛋', amount: '1个' }, { name: '葱花', amount: '适量' }], steps: [{ step: 1, desc: '紫菜撕碎，鸡蛋打散' }, { step: 2, desc: '锅中水烧开，放入紫菜' }, { step: 3, desc: '淋入蛋液，形成蛋花' }, { step: 4, desc: '加盐调味，撒葱花' }], tips: '蛋液要慢慢淋入' } },
+      { name: '蒸鱼', amount: '1份', calories: '220kcal', tags: ['优质蛋白', '低脂'], recipe: { ingredients: [{ name: '鲈鱼', amount: '1条' }, { name: '葱姜', amount: '适量' }, { name: '蒸鱼豉油', amount: '2勺' }], steps: [{ step: 1, desc: '鱼处理干净，铺上葱姜' }, { step: 2, desc: '大火蒸8分钟' }, { step: 3, desc: '淋蒸鱼豉油' }], tips: '蒸的时间不宜过长' } },
+      { name: '凉拌木耳', amount: '1份', calories: '60kcal', tags: ['清肠', '低卡'], recipe: { ingredients: [{ name: '黑木耳', amount: '100g' }, { name: '蒜末', amount: '2瓣' }, { name: '生抽', amount: '1勺' }], steps: [{ step: 1, desc: '木耳泡发，焯水2分钟' }, { step: 2, desc: '过冷水，沥干' }, { step: 3, desc: '加入蒜末、生抽拌匀' }], tips: '木耳泡发时间不宜过长' } },
+      { name: '小米粥', amount: '1碗', calories: '120kcal', tags: ['养胃', '安神'], recipe: { ingredients: [{ name: '小米', amount: '60g' }, { name: '清水', amount: '500ml' }], steps: [{ step: 1, desc: '小米淘洗干净' }, { step: 2, desc: '锅中水烧开，放入小米' }, { step: 3, desc: '大火烧开转小火煮20分钟' }], tips: '小米粥不宜过稠' } },
+    ],
+  ];
+
+  // 下午茶选项池
+  const snackOptions = [
+    [
+      { name: '枸杞菊花茶', amount: '1杯', calories: '15kcal', tags: ['清肝', '明目'], recipe: { ingredients: [{ name: '枸杞', amount: '10粒' }, { name: '菊花', amount: '5朵' }, { name: '热水', amount: '300ml' }], steps: [{ step: 1, desc: '枸杞、菊花放入杯中' }, { step: 2, desc: '冲入热水，焖5分钟' }], tips: '可反复冲泡2-3次' } },
+      { name: '原味坚果', amount: '1小把', calories: '150kcal', tags: ['健康脂肪', '饱腹'], recipe: { ingredients: [{ name: '混合坚果', amount: '20g' }], steps: [{ step: 1, desc: '直接食用' }], tips: '选择原味无添加的坚果' } },
+    ],
+    [
+      { name: '红枣桂圆茶', amount: '1杯', calories: '80kcal', tags: ['补血', '安神'], recipe: { ingredients: [{ name: '红枣', amount: '5颗' }, { name: '桂圆', amount: '10粒' }, { name: '热水', amount: '300ml' }], steps: [{ step: 1, desc: '红枣去核，桂圆去壳' }, { step: 2, desc: '放入杯中，冲入热水' }, { step: 3, desc: '焖10分钟即可饮用' }], tips: '可加入少许红糖' } },
+      { name: '水果拼盘', amount: '1份', calories: '100kcal', tags: ['维生素', '膳食纤维'], recipe: { ingredients: [{ name: '苹果', amount: '半个' }, { name: '香蕉', amount: '半根' }, { name: '蓝莓', amount: '20g' }], steps: [{ step: 1, desc: '水果洗净切块' }, { step: 2, desc: '摆盘即可' }], tips: '选择当季新鲜水果' } },
+    ],
+  ];
+
+  // 随机选择每个餐段的食谱
+  const randomBreakfast = breakfastOptions[Math.floor(Math.random() * breakfastOptions.length)];
+  const randomLunch = lunchOptions[Math.floor(Math.random() * lunchOptions.length)];
+  const randomDinner = dinnerOptions[Math.floor(Math.random() * dinnerOptions.length)];
+  const randomSnack = snackOptions[Math.floor(Math.random() * snackOptions.length)];
+
+  return [
+    {
+      type: '早餐',
+      time: '07:00 - 08:00',
+      icon: Sun,
+      meals: randomBreakfast,
+      totalCalories: `${randomBreakfast.reduce((sum, m) => sum + parseInt(m.calories), 0)}kcal`,
+      tip: '晨起先饮一杯温水，助脾胃苏醒',
+    },
+    {
+      type: '午餐',
+      time: '11:30 - 12:30',
+      icon: ChefHat,
+      meals: randomLunch,
+      totalCalories: `${randomLunch.reduce((sum, m) => sum + parseInt(m.calories), 0)}kcal`,
+      tip: '午餐宜七分饱，饭后散步15分钟助消化',
+    },
+    {
+      type: '下午茶',
+      time: '15:00 - 15:30',
+      icon: Coffee,
+      meals: randomSnack,
+      totalCalories: `${randomSnack.reduce((sum, m) => sum + parseInt(m.calories), 0)}kcal`,
+      tip: '午后小憩15分钟，恢复精力',
+    },
+    {
+      type: '晚餐',
+      time: '18:00 - 19:00',
+      icon: Moon,
+      meals: randomDinner,
+      totalCalories: `${randomDinner.reduce((sum, m) => sum + parseInt(m.calories), 0)}kcal`,
+      tip: '晚餐宜清淡，睡前3小时不进食',
+    },
+  ];
+}
+
 export default function MealPage() {
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<{ name: string; recipe: NonNullable<MealItem['recipe']> } | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [mealPlan, setMealPlan] = useState<MealSlot[]>([]);
 
   useEffect(() => {
     const generated = localStorage.getItem('mealPlanGenerated');
@@ -527,9 +350,11 @@ export default function MealPage() {
         try {
           setUserProfile(JSON.parse(profileStr));
         } catch {
-          // ignore parse error
+          // ignore
         }
       }
+      // 生成随机食谱
+      setMealPlan(generateRandomMealPlan());
       setIsReady(true);
     }
   }, [router]);
