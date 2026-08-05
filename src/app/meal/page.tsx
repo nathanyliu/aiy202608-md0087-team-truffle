@@ -482,41 +482,44 @@ export default function MealPage() {
 
   // 打卡功能状态
   const [checkedInMeals, setCheckedInMeals] = useState<string[]>([]);
-  const [checkInTarget, setCheckInTarget] = useState<{ slotIndex: number; mealName: string } | null>(null);
+  const [showCheckInButton, setShowCheckInButton] = useState(false);
   const checkInTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 双击菜品显示打卡按钮
-  const handleMealDoubleClick = (slotIndex: number, mealName: string) => {
-    // 清除之前的定时器
-    if (checkInTimerRef.current) {
-      clearTimeout(checkInTimerRef.current);
-    }
-    setCheckInTarget({ slotIndex, mealName });
-    // 5秒后自动消失
-    checkInTimerRef.current = setTimeout(() => {
-      setCheckInTarget(null);
-      checkInTimerRef.current = null;
-    }, 5000);
-  };
-
-  // 确认打卡
-  const handleCheckIn = () => {
-    if (checkInTarget) {
-      setCheckedInMeals(prev => [...prev, checkInTarget.mealName]);
-      setCheckInTarget(null);
+  // 打开食谱时显示打卡按钮（5秒后消失）
+  useEffect(() => {
+    if (selectedRecipe) {
+      setShowCheckInButton(true);
+      if (checkInTimerRef.current) {
+        clearTimeout(checkInTimerRef.current);
+      }
+      checkInTimerRef.current = setTimeout(() => {
+        setShowCheckInButton(false);
+        checkInTimerRef.current = null;
+      }, 5000);
+    } else {
+      setShowCheckInButton(false);
       if (checkInTimerRef.current) {
         clearTimeout(checkInTimerRef.current);
         checkInTimerRef.current = null;
       }
     }
-  };
+    return () => {
+      if (checkInTimerRef.current) {
+        clearTimeout(checkInTimerRef.current);
+      }
+    };
+  }, [selectedRecipe]);
 
-  // 取消打卡按钮
-  const cancelCheckIn = () => {
-    setCheckInTarget(null);
-    if (checkInTimerRef.current) {
-      clearTimeout(checkInTimerRef.current);
-      checkInTimerRef.current = null;
+  // 确认打卡
+  const handleCheckIn = () => {
+    if (selectedRecipe) {
+      setCheckedInMeals(prev => [...prev, selectedRecipe.name]);
+      setShowCheckInButton(false);
+      setSelectedRecipe(null);
+      if (checkInTimerRef.current) {
+        clearTimeout(checkInTimerRef.current);
+        checkInTimerRef.current = null;
+      }
     }
   };
 
@@ -677,16 +680,11 @@ export default function MealPage() {
               {isExpanded && (
                 <div className="px-4 pb-4 space-y-3 border-t border-border/40 pt-3">
                   {slot.meals.filter(meal => !checkedInMeals.includes(meal.name)).map((meal) => {
-                    const showCheckInButton = checkInTarget?.slotIndex === index && checkInTarget?.mealName === meal.name;
                     return (
                       <div
                         key={meal.name}
                         className={`flex items-center justify-between py-2 border-b border-border/20 last:border-0 ${meal.recipe ? 'cursor-pointer hover:bg-accent/5 rounded-lg px-2 -mx-2 transition-colors' : ''}`}
                         onClick={() => meal.recipe && setSelectedRecipe({ name: meal.name, recipe: meal.recipe })}
-                        onDoubleClick={(e) => {
-                          e.stopPropagation();
-                          handleMealDoubleClick(index, meal.name);
-                        }}
                       >
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
@@ -709,17 +707,6 @@ export default function MealPage() {
                         </div>
                         <div className="flex items-center gap-2 ml-3">
                           <span className="text-sm text-muted-foreground">{meal.calories}</span>
-                          {showCheckInButton && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleCheckIn();
-                              }}
-                              className="px-2 py-1 text-xs rounded bg-primary text-primary-foreground hover:bg-primary/90 transition-colors animate-in fade-in"
-                            >
-                              打卡
-                            </button>
-                          )}
                         </div>
                       </div>
                     );
@@ -862,6 +849,25 @@ export default function MealPage() {
                     <h4 className="text-xs font-semibold text-foreground">小贴士</h4>
                   </div>
                   <p className="text-xs text-foreground/80 leading-relaxed">{selectedRecipe.recipe.tips}</p>
+                </div>
+              )}
+
+              {/* 打卡按钮 */}
+              {showCheckInButton && !checkedInMeals.includes(selectedRecipe.name) && (
+                <div className="flex justify-center pt-2">
+                  <button
+                    onClick={handleCheckIn}
+                    className="px-6 py-2.5 rounded-full bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all animate-in fade-in zoom-in-95 shadow-lg"
+                  >
+                    ✓ 完成打卡
+                  </button>
+                </div>
+              )}
+              {checkedInMeals.includes(selectedRecipe.name) && (
+                <div className="flex justify-center pt-2">
+                  <span className="px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-medium">
+                    ✓ 已打卡
+                  </span>
                 </div>
               )}
             </div>
