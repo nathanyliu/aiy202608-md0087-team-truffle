@@ -289,6 +289,11 @@ function generateRandomMealPlan(): MealSlot[] {
       { name: '紫薯粥', amount: '1碗', calories: '200kcal', tags: ['花青素', '膳食纤维'], recipe: { ingredients: [{ name: '紫薯', amount: '100g' }, { name: '大米', amount: '50g' }, { name: '清水', amount: '500ml' }], steps: [{ step: 1, desc: '紫薯去皮切小块' }, { step: 2, desc: '大米淘洗后与紫薯一起入锅' }, { step: 3, desc: '大火烧开转小火煮30分钟' }], tips: '紫薯富含花青素，抗氧化效果好' } },
       { name: '蒸南瓜', amount: '1块', calories: '80kcal', tags: ['低卡', '护眼'], recipe: { ingredients: [{ name: '南瓜', amount: '200g' }], steps: [{ step: 1, desc: '南瓜去皮去籽切块' }, { step: 2, desc: '放入蒸锅大火蒸15分钟' }], tips: '南瓜富含β-胡萝卜素，保护视力' } },
     ],
+    [
+      { name: '红豆薏米粥', amount: '1碗', calories: '180kcal', tags: ['祛湿', '健脾'], recipe: { ingredients: [{ name: '红豆', amount: '50g' }, { name: '薏米', amount: '50g' }, { name: '清水', amount: '600ml' }], steps: [{ step: 1, desc: '红豆、薏米提前浸泡4小时' }, { step: 2, desc: '锅中加水，放入红豆薏米' }, { step: 3, desc: '大火烧开转小火煮40分钟' }], tips: '薏米性寒，可加几颗红枣中和' } },
+      { name: '鸡蛋三明治', amount: '1个', calories: '280kcal', tags: ['高蛋白', '便捷'], recipe: { ingredients: [{ name: '全麦面包', amount: '2片' }, { name: '鸡蛋', amount: '1个' }, { name: '生菜', amount: '2片' }, { name: '番茄', amount: '2片' }], steps: [{ step: 1, desc: '鸡蛋煎熟' }, { step: 2, desc: '面包片铺上生菜、番茄、鸡蛋' }, { step: 3, desc: '盖上另一片面包，对半切开' }], tips: '可加少许低脂沙拉酱' } },
+      { name: '黑芝麻糊', amount: '1碗', calories: '150kcal', tags: ['补肾', '乌发'], recipe: { ingredients: [{ name: '黑芝麻糊粉', amount: '30g' }, { name: '热水', amount: '250ml' }], steps: [{ step: 1, desc: '黑芝麻糊粉倒入碗中' }, { step: 2, desc: '冲入热水，搅拌均匀' }], tips: '可加少许蜂蜜调味' } },
+    ],
   ];
 
   // 午餐选项池
@@ -305,6 +310,12 @@ function generateRandomMealPlan(): MealSlot[] {
       { name: '清炒时蔬', amount: '1份', calories: '80kcal', tags: ['维生素', '低卡'], recipe: { ingredients: [{ name: '时令蔬菜', amount: '200g' }, { name: '蒜末', amount: '2瓣' }], steps: [{ step: 1, desc: '蔬菜洗净切段' }, { step: 2, desc: '热锅爆香蒜末' }, { step: 3, desc: '放入蔬菜快速翻炒' }], tips: '大火快炒保持蔬菜脆嫩' } },
       { name: '杂粮饭', amount: '1碗', calories: '200kcal', tags: ['粗粮', '营养均衡'], recipe: { ingredients: [{ name: '糙米', amount: '30g' }, { name: '小米', amount: '30g' }, { name: '红豆', amount: '20g' }, { name: '薏米', amount: '20g' }], steps: [{ step: 1, desc: '杂粮提前浸泡4小时' }, { step: 2, desc: '放入电饭煲煮熟' }], tips: '杂粮比例可按喜好调整' } },
     ],
+    [
+      { name: '冬瓜排骨汤', amount: '1碗', calories: '280kcal', tags: ['清热', '利水'], recipe: { ingredients: [{ name: '排骨', amount: '250g' }, { name: '冬瓜', amount: '300g' }, { name: '姜片', amount: '3片' }], steps: [{ step: 1, desc: '排骨焯水去血沫' }, { step: 2, desc: '冬瓜去皮切块' }, { step: 3, desc: '排骨、姜片入锅加水炖1小时' }, { step: 4, desc: '加入冬瓜再炖20分钟' }], tips: '冬瓜后放可保持口感' } },
+      { name: '香菇滑鸡', amount: '1份', calories: '320kcal', tags: ['高蛋白', '提免疫'], recipe: { ingredients: [{ name: '鸡腿肉', amount: '200g' }, { name: '香菇', amount: '100g' }, { name: '生抽', amount: '2勺' }], steps: [{ step: 1, desc: '鸡腿肉切块，用生抽腌制' }, { step: 2, desc: '香菇切片' }, { step: 3, desc: '鸡肉、香菇铺盘，大火蒸15分钟' }], tips: '蒸的时间不宜过长，肉质更嫩' } },
+      { name: '清炒豆芽', amount: '1份', calories: '70kcal', tags: ['维生素C', '低卡'], recipe: { ingredients: [{ name: '绿豆芽', amount: '200g' }, { name: '蒜末', amount: '2瓣' }], steps: [{ step: 1, desc: '豆芽洗净沥干' }, { step: 2, desc: '热锅爆香蒜末' }, { step: 3, desc: '放入豆芽大火快炒1分钟' }], tips: '豆芽不宜炒太久，保持脆嫩' } },
+      { name: '红薯饭', amount: '1碗', calories: '210kcal', tags: ['粗粮', '膳食纤维'], recipe: { ingredients: [{ name: '大米', amount: '80g' }, { name: '红薯', amount: '100g' }], steps: [{ step: 1, desc: '红薯去皮切块' }, { step: 2, desc: '大米淘洗后与红薯一起入电饭煲' }, { step: 3, desc: '加水煮熟' }], tips: '红薯富含膳食纤维，促进肠道健康' } },
+    ],
   ];
 
   // 晚餐选项池
@@ -320,6 +331,12 @@ function generateRandomMealPlan(): MealSlot[] {
       { name: '凉拌木耳', amount: '1份', calories: '60kcal', tags: ['清肠', '低卡'], recipe: { ingredients: [{ name: '黑木耳', amount: '100g' }, { name: '蒜末', amount: '2瓣' }, { name: '生抽', amount: '1勺' }], steps: [{ step: 1, desc: '木耳泡发，焯水2分钟' }, { step: 2, desc: '过冷水，沥干' }, { step: 3, desc: '加入蒜末、生抽拌匀' }], tips: '木耳泡发时间不宜过长' } },
       { name: '小米粥', amount: '1碗', calories: '120kcal', tags: ['养胃', '安神'], recipe: { ingredients: [{ name: '小米', amount: '60g' }, { name: '清水', amount: '500ml' }], steps: [{ step: 1, desc: '小米淘洗干净' }, { step: 2, desc: '锅中水烧开，放入小米' }, { step: 3, desc: '大火烧开转小火煮20分钟' }], tips: '小米粥不宜过稠' } },
     ],
+    [
+      { name: '玉米排骨汤', amount: '1碗', calories: '280kcal', tags: ['补钙', '健脾'], recipe: { ingredients: [{ name: '排骨', amount: '250g' }, { name: '玉米', amount: '1根' }, { name: '胡萝卜', amount: '1根' }], steps: [{ step: 1, desc: '排骨焯水去血沫' }, { step: 2, desc: '玉米切段，胡萝卜切块' }, { step: 3, desc: '所有材料入锅，加水炖1.5小时' }], tips: '玉米富含膳食纤维' } },
+      { name: '清蒸茄子', amount: '1份', calories: '90kcal', tags: ['低卡', '降脂'], recipe: { ingredients: [{ name: '茄子', amount: '1根' }, { name: '蒜末', amount: '3瓣' }, { name: '生抽', amount: '2勺' }], steps: [{ step: 1, desc: '茄子切长条，上锅蒸8分钟' }, { step: 2, desc: '蒜末、生抽调成酱汁' }, { step: 3, desc: '酱汁淋在蒸好的茄子上' }], tips: '茄子蒸后更软糯' } },
+      { name: '番茄炒蛋', amount: '1份', calories: '180kcal', tags: ['高蛋白', '维生素'], recipe: { ingredients: [{ name: '番茄', amount: '2个' }, { name: '鸡蛋', amount: '2个' }], steps: [{ step: 1, desc: '番茄切块，鸡蛋打散' }, { step: 2, desc: '热锅炒熟鸡蛋，盛出' }, { step: 3, desc: '炒番茄至出汁，加入鸡蛋翻炒' }], tips: '番茄先炒更容易出汁' } },
+      { name: '红豆粥', amount: '1碗', calories: '140kcal', tags: ['补血', '健脾'], recipe: { ingredients: [{ name: '红豆', amount: '60g' }, { name: '大米', amount: '40g' }, { name: '清水', amount: '600ml' }], steps: [{ step: 1, desc: '红豆提前浸泡4小时' }, { step: 2, desc: '红豆、大米入锅加水' }, { step: 3, desc: '大火烧开转小火煮40分钟' }], tips: '红豆富含铁元素' } },
+    ],
   ];
 
   // 下午茶选项池
@@ -334,11 +351,19 @@ function generateRandomMealPlan(): MealSlot[] {
     ],
   ];
 
-  // 随机选择每个餐段的食谱
-  const randomBreakfast = breakfastOptions[Math.floor(Math.random() * breakfastOptions.length)];
-  const randomLunch = lunchOptions[Math.floor(Math.random() * lunchOptions.length)];
-  const randomDinner = dinnerOptions[Math.floor(Math.random() * dinnerOptions.length)];
-  const randomSnack = snackOptions[Math.floor(Math.random() * snackOptions.length)];
+  // 基于日期的伪随机数生成器（同一天显示相同食谱，不同天显示不同）
+  const today = new Date();
+  const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  const seededRandom = (seed: number) => {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  };
+
+  // 随机选择每个餐段的食谱（基于日期）
+  const randomBreakfast = breakfastOptions[Math.floor(seededRandom(dateSeed) * breakfastOptions.length)];
+  const randomLunch = lunchOptions[Math.floor(seededRandom(dateSeed + 1) * lunchOptions.length)];
+  const randomDinner = dinnerOptions[Math.floor(seededRandom(dateSeed + 2) * dinnerOptions.length)];
+  const randomSnack = snackOptions[Math.floor(seededRandom(dateSeed + 3) * snackOptions.length)];
 
   return [
     {
