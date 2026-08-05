@@ -22,6 +22,7 @@ import {
   Utensils,
   MapPin,
   Users,
+  Bot,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -599,6 +600,21 @@ export default function HomePage() {
             <Sun className="h-3.5 w-3.5" />
             {info.season} · {info.solarTerm}第{info.solarTermDay}天 · 距{info.nextTerm} {info.daysToNext}天
           </span>
+        </div>
+      </div>
+
+      {/* AI 生成声明 - 醒目提示 */}
+      <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-950/30 px-4 py-3 flex items-center gap-3">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/50">
+          <Bot className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+            AI 智能生成内容
+          </p>
+          <p className="text-xs text-amber-700 dark:text-amber-300/80">
+            本页面所有食养方案、营养建议均由 AI 根据您的健康数据智能生成，仅供参考。如有特殊健康状况，请咨询专业医师。
+          </p>
         </div>
       </div>
 
