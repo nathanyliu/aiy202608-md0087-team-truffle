@@ -13,8 +13,143 @@ import {
   Camera,
   ChevronRight,
   Sparkles,
+  Plus,
+  X,
+  Search,
+  UtensilsCrossed,
+  Trash2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+// 食物数据库
+interface FoodItem {
+  id: string;
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+interface FoodCategory {
+  name: string;
+  emoji: string;
+  foods: FoodItem[];
+}
+
+const foodDatabase: FoodCategory[] = [
+  {
+    name: '主食谷物',
+    emoji: '🌾',
+    foods: [
+      { id: 'grain-1', name: '糙米饭', calories: 111, protein: 2.6, carbs: 23, fat: 0.9 },
+      { id: 'grain-2', name: '燕麦', calories: 150, protein: 5, carbs: 27, fat: 2.5 },
+      { id: 'grain-3', name: '全麦面包', calories: 247, protein: 13, carbs: 41, fat: 3.4 },
+      { id: 'grain-4', name: '红薯', calories: 86, protein: 1.6, carbs: 20, fat: 0.1 },
+      { id: 'grain-5', name: '玉米', calories: 96, protein: 3.2, carbs: 19, fat: 1.2 },
+      { id: 'grain-6', name: '小米粥', calories: 46, protein: 1.1, carbs: 9, fat: 0.3 },
+      { id: 'grain-7', name: '荞麦面', calories: 137, protein: 5, carbs: 24, fat: 2.4 },
+      { id: 'grain-8', name: '藜麦', calories: 120, protein: 4.4, carbs: 21, fat: 1.9 },
+    ],
+  },
+  {
+    name: '蔬菜',
+    emoji: '🥬',
+    foods: [
+      { id: 'veg-1', name: '西兰花', calories: 34, protein: 2.8, carbs: 4.3, fat: 0.4 },
+      { id: 'veg-2', name: '菠菜', calories: 23, protein: 2.9, carbs: 1.3, fat: 0.4 },
+      { id: 'veg-3', name: '番茄', calories: 18, protein: 0.9, carbs: 3.9, fat: 0.2 },
+      { id: 'veg-4', name: '黄瓜', calories: 15, protein: 0.7, carbs: 2.9, fat: 0.1 },
+      { id: 'veg-5', name: '胡萝卜', calories: 41, protein: 0.9, carbs: 9.6, fat: 0.2 },
+      { id: 'veg-6', name: '山药', calories: 57, protein: 1.9, carbs: 12.4, fat: 0.2 },
+      { id: 'veg-7', name: '冬瓜', calories: 12, protein: 0.4, carbs: 2.6, fat: 0.1 },
+      { id: 'veg-8', name: '南瓜', calories: 26, protein: 1, carbs: 5.3, fat: 0.3 },
+      { id: 'veg-9', name: '芹菜', calories: 16, protein: 0.7, carbs: 3.4, fat: 0.1 },
+      { id: 'veg-10', name: '生菜', calories: 14, protein: 1.4, carbs: 1.3, fat: 0.2 },
+    ],
+  },
+  {
+    name: '水果',
+    emoji: '🍎',
+    foods: [
+      { id: 'fruit-1', name: '苹果', calories: 52, protein: 0.3, carbs: 14, fat: 0.2 },
+      { id: 'fruit-2', name: '香蕉', calories: 89, protein: 1.1, carbs: 23, fat: 0.3 },
+      { id: 'fruit-3', name: '蓝莓', calories: 57, protein: 0.7, carbs: 14, fat: 0.3 },
+      { id: 'fruit-4', name: '猕猴桃', calories: 61, protein: 1.1, carbs: 15, fat: 0.5 },
+      { id: 'fruit-5', name: '樱桃', calories: 63, protein: 1.1, carbs: 16, fat: 0.2 },
+      { id: 'fruit-6', name: '橙子', calories: 47, protein: 0.9, carbs: 12, fat: 0.1 },
+      { id: 'fruit-7', name: '葡萄', calories: 69, protein: 0.7, carbs: 18, fat: 0.2 },
+      { id: 'fruit-8', name: '草莓', calories: 32, protein: 0.7, carbs: 7.7, fat: 0.3 },
+    ],
+  },
+  {
+    name: '肉禽蛋',
+    emoji: '🥩',
+    foods: [
+      { id: 'meat-1', name: '鸡胸肉', calories: 133, protein: 31, carbs: 0, fat: 1.2 },
+      { id: 'meat-2', name: '鸡蛋(煮)', calories: 144, protein: 13.3, carbs: 1.5, fat: 9.5 },
+      { id: 'meat-3', name: '牛腱肉', calories: 106, protein: 20, carbs: 0.5, fat: 2.3 },
+      { id: 'meat-4', name: '猪里脊', calories: 155, protein: 20, carbs: 1.5, fat: 7.9 },
+      { id: 'meat-5', name: '鸭肉', calories: 240, protein: 15.5, carbs: 0.2, fat: 19.7 },
+      { id: 'meat-6', name: '三文鱼', calories: 139, protein: 21, carbs: 0, fat: 6.3 },
+      { id: 'meat-7', name: '鲈鱼', calories: 97, protein: 18.6, carbs: 0.9, fat: 2 },
+      { id: 'meat-8', name: '虾', calories: 87, protein: 18.6, carbs: 0.8, fat: 0.8 },
+    ],
+  },
+  {
+    name: '豆制品',
+    emoji: '🫘',
+    foods: [
+      { id: 'bean-1', name: '豆腐(北)', calories: 81, protein: 8.1, carbs: 4.2, fat: 3.7 },
+      { id: 'bean-2', name: '豆腐(嫩)', calories: 57, protein: 6.2, carbs: 2.6, fat: 2.1 },
+      { id: 'bean-3', name: '豆浆(无糖)', calories: 14, protein: 1.8, carbs: 0.5, fat: 0.7 },
+      { id: 'bean-4', name: '腐竹', calories: 457, protein: 44.6, carbs: 22.3, fat: 21.7 },
+      { id: 'bean-5', name: '毛豆', calories: 131, protein: 13.1, carbs: 10.5, fat: 5 },
+      { id: 'bean-6', name: '红豆', calories: 324, protein: 20.2, carbs: 63.4, fat: 0.6 },
+    ],
+  },
+  {
+    name: '奶制品',
+    emoji: '🥛',
+    foods: [
+      { id: 'dairy-1', name: '纯牛奶', calories: 65, protein: 3.3, carbs: 4.9, fat: 3.6 },
+      { id: 'dairy-2', name: '酸奶(无糖)', calories: 59, protein: 4.3, carbs: 5.5, fat: 2.7 },
+      { id: 'dairy-3', name: '奶酪', calories: 328, protein: 20, carbs: 3.5, fat: 27 },
+      { id: 'dairy-4', name: '脱脂牛奶', calories: 33, protein: 3.4, carbs: 5, fat: 0.1 },
+    ],
+  },
+  {
+    name: '坚果种子',
+    emoji: '🥜',
+    foods: [
+      { id: 'nut-1', name: '核桃', calories: 627, protein: 15, carbs: 14, fat: 60 },
+      { id: 'nut-2', name: '杏仁', calories: 578, protein: 21, carbs: 22, fat: 50 },
+      { id: 'nut-3', name: '腰果', calories: 553, protein: 18, carbs: 30, fat: 44 },
+      { id: 'nut-4', name: '花生', calories: 567, protein: 26, carbs: 16, fat: 49 },
+      { id: 'nut-5', name: '芝麻', calories: 573, protein: 19, carbs: 23, fat: 50 },
+      { id: 'nut-6', name: '南瓜子', calories: 559, protein: 30, carbs: 11, fat: 49 },
+    ],
+  },
+  {
+    name: '菌菇类',
+    emoji: '🍄',
+    foods: [
+      { id: 'mush-1', name: '香菇', calories: 26, protein: 2.2, carbs: 5.2, fat: 0.3 },
+      { id: 'mush-2', name: '金针菇', calories: 26, protein: 2.4, carbs: 6, fat: 0.4 },
+      { id: 'mush-3', name: '木耳', calories: 21, protein: 1.5, carbs: 5, fat: 0.2 },
+      { id: 'mush-4', name: '杏鲍菇', calories: 35, protein: 3.1, carbs: 7.3, fat: 0.1 },
+    ],
+  },
+];
+
+interface CustomFood {
+  id: string;
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
 
 // 节气信息
 function getSeasonInfo() {
@@ -178,7 +313,50 @@ export default function HomePage() {
   const [notes, setNotes] = useState('');
   const [tongueImage, setTongueImage] = useState<string | null>(null);
 
+  // 饮食偏好
+  const [selectedFoods, setSelectedFoods] = useState<string[]>([]);
+  const [customFoods, setCustomFoods] = useState<CustomFood[]>([]);
+  const [activeCategory, setActiveCategory] = useState('主食谷物');
+  const [foodSearch, setFoodSearch] = useState('');
+  const [showCustomForm, setShowCustomForm] = useState(false);
+  const [newCustomFood, setNewCustomFood] = useState({ name: '', calories: '', protein: '', carbs: '', fat: '' });
+
   const isProfileComplete = age && gender && height && weight;
+
+  const toggleFood = (foodId: string) => {
+    setSelectedFoods(prev =>
+      prev.includes(foodId) ? prev.filter(id => id !== foodId) : [...prev, foodId]
+    );
+  };
+
+  const addCustomFood = () => {
+    if (!newCustomFood.name || !newCustomFood.calories) return;
+    const food: CustomFood = {
+      id: `custom-${Date.now()}`,
+      name: newCustomFood.name,
+      calories: Number(newCustomFood.calories) || 0,
+      protein: Number(newCustomFood.protein) || 0,
+      carbs: Number(newCustomFood.carbs) || 0,
+      fat: Number(newCustomFood.fat) || 0,
+    };
+    setCustomFoods(prev => [...prev, food]);
+    setNewCustomFood({ name: '', calories: '', protein: '', carbs: '', fat: '' });
+    setShowCustomForm(false);
+  };
+
+  const removeCustomFood = (id: string) => {
+    setCustomFoods(prev => prev.filter(f => f.id !== id));
+  };
+
+  const currentCategory = foodDatabase.find(c => c.name === activeCategory);
+  const filteredFoods = currentCategory?.foods.filter(f =>
+    f.name.includes(foodSearch)
+  ) || [];
+
+  const allSelectedFoods: (FoodItem | CustomFood)[] = [
+    ...foodDatabase.flatMap(c => c.foods).filter(f => selectedFoods.includes(f.id)),
+    ...customFoods,
+  ];
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -447,30 +625,216 @@ export default function HomePage() {
               </label>
             )}
           </div>
-
-          {/* 生成餐单按钮 */}
-          <div className="card-warm p-5">
-            {isProfileComplete ? (
-              <button
-                onClick={() => {
-                  localStorage.setItem('mealPlanGenerated', 'true');
-                  router.push('/meal');
-                }}
-                className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-              >
-                <Sparkles className="h-4 w-4" />
-                生成营养方案
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            ) : (
-              <div className="text-center py-2">
-                <p className="text-sm text-muted-foreground">
-                  请填完左侧基础健康档案中的必填项
-                </p>
-              </div>
-            )}
-          </div>
         </div>
+      </div>
+
+      {/* 饮食偏好记录 */}
+      <div className="card-warm p-5 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <UtensilsCrossed className="h-5 w-5 text-primary" />
+            <h2 className="font-serif-cn text-lg font-semibold text-foreground">饮食偏好记录</h2>
+            <span className="text-xs text-muted-foreground">（可选 · 帮助AI更精准推荐）</span>
+          </div>
+          {allSelectedFoods.length > 0 && (
+            <span className="text-xs text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+              已选 {allSelectedFoods.length} 种食物
+            </span>
+          )}
+        </div>
+
+        {/* 分类标签 */}
+        <div className="flex flex-wrap gap-2">
+          {foodDatabase.map(cat => (
+            <button
+              key={cat.name}
+              onClick={() => { setActiveCategory(cat.name); setFoodSearch(''); }}
+              className={cn(
+                'px-3 py-1.5 rounded-full text-xs font-medium transition-all',
+                activeCategory === cat.name
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+              )}
+            >
+              {cat.emoji} {cat.name}
+            </button>
+          ))}
+          <button
+            onClick={() => setShowCustomForm(!showCustomForm)}
+            className={cn(
+              'px-3 py-1.5 rounded-full text-xs font-medium transition-all border border-dashed',
+              showCustomForm
+                ? 'border-accent text-accent bg-accent/10'
+                : 'border-border text-muted-foreground hover:border-accent hover:text-accent'
+            )}
+          >
+            <Plus className="h-3 w-3 inline mr-1" />
+            自定义食物
+          </button>
+        </div>
+
+        {/* 自定义食物表单 */}
+        {showCustomForm && (
+          <div className="bg-secondary/50 rounded-xl p-4 space-y-3 border border-dashed border-accent/30">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-foreground">添加自定义食物</span>
+              <button onClick={() => setShowCustomForm(false)} className="text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <div className="col-span-2 sm:col-span-1">
+                <label className="text-xs text-muted-foreground mb-1 block">食物名称 *</label>
+                <input
+                  type="text"
+                  value={newCustomFood.name}
+                  onChange={e => setNewCustomFood(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="如：牛油果"
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">热量 (kcal/100g)</label>
+                <input
+                  type="number"
+                  value={newCustomFood.calories}
+                  onChange={e => setNewCustomFood(prev => ({ ...prev, calories: e.target.value }))}
+                  placeholder="0"
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">蛋白质 (g)</label>
+                <input
+                  type="number"
+                  value={newCustomFood.protein}
+                  onChange={e => setNewCustomFood(prev => ({ ...prev, protein: e.target.value }))}
+                  placeholder="0"
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">碳水 (g)</label>
+                <input
+                  type="number"
+                  value={newCustomFood.carbs}
+                  onChange={e => setNewCustomFood(prev => ({ ...prev, carbs: e.target.value }))}
+                  placeholder="0"
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1 block">脂肪 (g)</label>
+                <input
+                  type="number"
+                  value={newCustomFood.fat}
+                  onChange={e => setNewCustomFood(prev => ({ ...prev, fat: e.target.value }))}
+                  placeholder="0"
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+            </div>
+            <button
+              onClick={addCustomFood}
+              disabled={!newCustomFood.name || !newCustomFood.calories}
+              className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+            >
+              添加食物
+            </button>
+          </div>
+        )}
+
+        {/* 搜索框 */}
+        {!showCustomForm && (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={foodSearch}
+              onChange={e => setFoodSearch(e.target.value)}
+              placeholder={`在${activeCategory}中搜索...`}
+              className="w-full pl-9 pr-4 py-2 rounded-lg bg-secondary/50 border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
+        )}
+
+        {/* 食物网格 */}
+        {!showCustomForm && (
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-2">
+            {filteredFoods.map(food => {
+              const isSelected = selectedFoods.includes(food.id);
+              return (
+                <button
+                  key={food.id}
+                  onClick={() => toggleFood(food.id)}
+                  className={cn(
+                    'p-2.5 rounded-xl text-xs text-center transition-all border',
+                    isSelected
+                      ? 'bg-primary/10 border-primary text-primary font-medium'
+                      : 'bg-background border-border hover:border-primary/50 hover:bg-primary/5'
+                  )}
+                >
+                  <div className="font-medium truncate">{food.name}</div>
+                  <div className="text-[10px] text-muted-foreground mt-0.5">
+                    {food.calories}kcal
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* 已选食物展示 */}
+        {allSelectedFoods.length > 0 && (
+          <div className="pt-3 border-t border-border/50">
+            <p className="text-xs text-muted-foreground mb-2">已选择的食物：</p>
+            <div className="flex flex-wrap gap-2">
+              {allSelectedFoods.map(food => (
+                <span
+                  key={food.id}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs"
+                >
+                  {food.name}
+                  <button
+                    onClick={() => {
+                      if (food.id.startsWith('custom-')) {
+                        removeCustomFood(food.id);
+                      } else {
+                        toggleFood(food.id);
+                      }
+                    }}
+                    className="hover:text-destructive"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 生成营养方案按钮 */}
+      <div className="card-warm p-5">
+        {isProfileComplete ? (
+          <button
+            onClick={() => {
+              localStorage.setItem('mealPlanGenerated', 'true');
+              router.push('/meal');
+            }}
+            className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+          >
+            <Sparkles className="h-4 w-4" />
+            生成营养方案
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        ) : (
+          <div className="text-center py-2">
+            <p className="text-sm text-muted-foreground">
+              请填完左侧基础健康档案中的必填项
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
