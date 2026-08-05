@@ -523,11 +523,13 @@ export default function HomePage() {
                 value={age}
                 min={1}
                 max={120}
-                onChange={(e) => {
+                onChange={(e) => setAge(e.target.value)}
+                onBlur={(e) => {
                   const val = e.target.value;
-                  if (val === '') { setAge(''); return; }
+                  if (val === '') return;
                   const num = parseInt(val, 10);
-                  if (num >= 1 && num <= 120) setAge(val);
+                  if (num < 1) setAge('1');
+                  else if (num > 120) setAge('120');
                 }}
                 className="input-warm"
               />
@@ -552,11 +554,13 @@ export default function HomePage() {
                 value={height}
                 min={50}
                 max={250}
-                onChange={(e) => {
+                onChange={(e) => setHeight(e.target.value)}
+                onBlur={(e) => {
                   const val = e.target.value;
-                  if (val === '') { setHeight(''); return; }
+                  if (val === '') return;
                   const num = parseFloat(val);
-                  if (num >= 50 && num <= 250) setHeight(val);
+                  if (num < 50) setHeight('50');
+                  else if (num > 250) setHeight('250');
                 }}
                 className="input-warm"
               />
@@ -572,11 +576,13 @@ export default function HomePage() {
                 value={weight}
                 min={10}
                 max={300}
-                onChange={(e) => {
+                onChange={(e) => setWeight(e.target.value)}
+                onBlur={(e) => {
                   const val = e.target.value;
-                  if (val === '') { setWeight(''); return; }
+                  if (val === '') return;
                   const num = parseFloat(val);
-                  if (num >= 10 && num <= 300) setWeight(val);
+                  if (num < 10) setWeight('10');
+                  else if (num > 300) setWeight('300');
                 }}
                 className="input-warm"
               />
