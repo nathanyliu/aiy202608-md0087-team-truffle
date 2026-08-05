@@ -1,363 +1,122 @@
-# projects
+# 健康饮食管理网站
 
-这是一个基于 [Next.js 16](https://nextjs.org) + [shadcn/ui](https://ui.shadcn.com) 的全栈应用项目，由扣子编程 CLI 创建。
+> 主要面向关注健康饮食、有健身目标、追求个性化营养方案的人群，基于当日状态个性化推荐的健康食谱
 
-## 快速开始
+## 🏆 AIY 黑客松 2026 深圳站 参赛作品
 
-### 启动开发服务器
+- **命题企业/赛道**：Coze · 智能体方向
+- **团队**：team-truffle
+- **团队编号**：md0087
 
-```bash
-coze dev
-```
+---
 
-启动后，在浏览器中打开 [http://localhost:5000](http://localhost:5000) 查看应用。
+## 团队分工
 
-开发服务器支持热更新，修改代码后页面会自动刷新。
+| 队员 | 分工 |
+|------|------|
+| 刘漾 | 开发 |
+| 代雨鑫 | 调研路演 |
+| 邵怡然 | 设计统筹 |
 
-### 构建生产版本
+---
 
-```bash
-coze build
-```
+## 它能做什么
 
-### 启动生产服务器
+### 核心功能
 
-```bash
-coze start
-```
+1. **智能健康档案** — 记录年龄、性别、身高、体重、健身目标、训练频率、过敏原等
+2. **每日健康反馈** — 记录睡眠、精力、肌肉酸痛、消化状态、情绪等当日状态
+3. **饮食偏好记录** — 从60+常见食物中选择偏好，支持自定义食物（热量、蛋白质、碳水、脂肪）
+4. **偏好冲突检测** — 当偏好与营养需求矛盾时，智能提示并给出替代方案
+5. **个性化营养方案** — 基于 Mifflin-St Jeor 公式计算 BMR/TDEE，生成个性化餐单
+6. **详细营养分析** — 体质匹配、运动协同、情绪睡眠、节气防护、营养摄入建议
+7. **食谱详情** — 每道菜品可查看原料清单、做法步骤、营养数据来源
+8. **打卡功能** — 完成用餐后可打卡，追踪饮食执行情况
+9. **食方社区** — 浏览用户分享的自制食谱，可收藏、可加入今日食方
+10. **食养地图** — 深圳素食/沙拉餐厅导航，支持调用设备地图
+11. **影响因子追踪** — 体重、睡眠、精力、消化、情绪趋势图表
 
-## 项目结构
+### 设计特色
 
-```
-src/
-├── app/                      # Next.js App Router 目录
-│   ├── layout.tsx           # 根布局组件
-│   ├── page.tsx             # 首页
-│   ├── globals.css          # 全局样式（包含 shadcn 主题变量）
-│   └── [route]/             # 其他路由页面
-├── components/              # React 组件目录
-│   └── ui/                  # shadcn/ui 基础组件（优先使用）
-│       ├── button.tsx
-│       ├── card.tsx
-│       └── ...
-├── lib/                     # 工具函数库
-│   └── utils.ts            # cn() 等工具函数
-└── hooks/                   # 自定义 React Hooks（可选）
+- 草本温润、时令食养、东方养生美学风格
+- 基于二十四节气的时令推荐
+- 营养数据引用《中国食物成分表》及 USDA FoodData Central
 
-server/
-├── index.ts                 # 自定义服务器入口
-├── tsconfig.json           # Server TypeScript 配置
-└── dist/                    # 编译输出目录（自动生成）
-```
+---
 
-## 核心开发规范
+## 演示
 
-### 1. 组件开发
+> 📸 截图待补充
 
-**优先使用 shadcn/ui 基础组件**
+🔗 **在线体验**：https://58nzqrsnkn.coze.site
 
-本项目已预装完整的 shadcn/ui 组件库，位于 `src/components/ui/` 目录。开发时应优先使用这些组件作为基础：
+---
 
-```tsx
-// ✅ 推荐：使用 shadcn 基础组件
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+## 用到的技术/AI工具
 
-export default function MyComponent() {
-  return (
-    <Card>
-      <CardHeader>标题</CardHeader>
-      <CardContent>
-        <Input placeholder="输入内容" />
-        <Button>提交</Button>
-      </CardContent>
-    </Card>
-  );
-}
-```
+### 技术栈
 
-**可用的 shadcn 组件清单**
+| 类别 | 技术 |
+|------|------|
+| 框架 | Next.js 16 (App Router) |
+| 核心 | React 19 |
+| 语言 | TypeScript 5 |
+| 样式 | Tailwind CSS 4 |
+| UI 组件 | shadcn/ui (Radix UI) |
+| 图标 | lucide-react |
+| 图表 | Recharts |
+| 表单 | React Hook Form + Zod |
 
-- 表单：`button`, `input`, `textarea`, `select`, `checkbox`, `radio-group`, `switch`, `slider`
-- 布局：`card`, `separator`, `tabs`, `accordion`, `collapsible`, `scroll-area`
-- 反馈：`alert`, `alert-dialog`, `dialog`, `toast`, `sonner`, `progress`
-- 导航：`dropdown-menu`, `menubar`, `navigation-menu`, `context-menu`
-- 数据展示：`table`, `avatar`, `badge`, `hover-card`, `tooltip`, `popover`
-- 其他：`calendar`, `command`, `carousel`, `resizable`, `sidebar`
+### AI 工具
 
-详见 `src/components/ui/` 目录下的具体组件实现。
+- Coze 编程平台
 
-### 2. 路由开发
+---
 
-Next.js 使用文件系统路由，在 `src/app/` 目录下创建文件夹即可添加路由：
+## 怎么跑起来
+
+### 环境要求
+
+- Node.js 18+
+- pnpm
+
+### 安装步骤
 
 ```bash
-# 创建新路由 /about
-src/app/about/page.tsx
+# 克隆仓库
+git clone https://github.com/nathanyliu/aiy202608-md0087-team-truffle.git
+cd aiy202608-md0087-team-truffle
 
-# 创建动态路由 /posts/[id]
-src/app/posts/[id]/page.tsx
-
-# 创建路由组（不影响 URL）
-src/app/(marketing)/about/page.tsx
-
-# 创建 API 路由
-src/app/api/users/route.ts
-```
-
-**页面组件示例**
-
-```tsx
-// src/app/about/page.tsx
-import { Button } from '@/components/ui/button';
-
-export const metadata = {
-  title: '关于我们',
-  description: '关于页面描述',
-};
-
-export default function AboutPage() {
-  return (
-    <div>
-      <h1>关于我们</h1>
-      <Button>了解更多</Button>
-    </div>
-  );
-}
-```
-
-**动态路由示例**
-
-```tsx
-// src/app/posts/[id]/page.tsx
-export default async function PostPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-
-  return <div>文章 ID: {id}</div>;
-}
-```
-
-**API 路由示例**
-
-```tsx
-// src/app/api/users/route.ts
-import { NextResponse } from 'next/server';
-
-export async function GET() {
-  return NextResponse.json({ users: [] });
-}
-
-export async function POST(request: Request) {
-  const body = await request.json();
-  return NextResponse.json({ success: true });
-}
-```
-
-### 3. 依赖管理
-
-**必须使用 pnpm 管理依赖**
-
-```bash
-# ✅ 安装依赖
+# 安装依赖
 pnpm install
 
-# ✅ 添加新依赖
-pnpm add package-name
+# 启动开发服务器
+pnpm dev
 
-# ✅ 添加开发依赖
-pnpm add -D package-name
+# 构建生产版本
+pnpm build
 
-# ❌ 禁止使用 npm 或 yarn
-# npm install  # 错误！
-# yarn add     # 错误！
+# 启动生产服务器
+pnpm start
 ```
 
-项目已配置 `preinstall` 脚本，使用其他包管理器会报错。
+访问 http://localhost:5000 查看应用
 
-### 4. 样式开发
+---
 
-**使用 Tailwind CSS v4**
+## 后续计划
 
-本项目使用 Tailwind CSS v4 进行样式开发，并已配置 shadcn 主题变量。
+1. **接入真实营养数据库** — 对接 USDA FoodData Central API，获取精确营养数据
+2. **AI 智能体集成** — 接入大语言模型，实现更智能的食谱推荐和营养分析
+3. **用户系统** — 支持注册登录，云端同步健康档案和饮食记录
+4. **社区功能扩展** — 支持用户发布食谱、评论互动、关注点赞
+5. **更多城市食养地图** — 扩展到其他城市的健康餐厅推荐
+6. **智能硬件接入** — 对接智能手环/手表，自动获取睡眠、运动数据
 
-```tsx
-// 使用 Tailwind 类名
-<div className="flex items-center gap-4 p-4 rounded-lg bg-background">
-  <Button className="bg-primary text-primary-foreground">
-    主要按钮
-  </Button>
-</div>
+---
 
-// 使用 cn() 工具函数合并类名
-import { cn } from '@/lib/utils';
+## 版权说明
 
-<div className={cn(
-  "base-class",
-  condition && "conditional-class",
-  className
-)}>
-  内容
-</div>
-```
+本作品版权归 刘漾，代雨鑫，邵怡然 共同所有，采用 MIT License 开源，使用请署名。
 
-**主题变量**
-
-主题变量定义在 `src/app/globals.css` 中，支持亮色/暗色模式：
-
-- `--background`, `--foreground`
-- `--primary`, `--primary-foreground`
-- `--secondary`, `--secondary-foreground`
-- `--muted`, `--muted-foreground`
-- `--accent`, `--accent-foreground`
-- `--destructive`, `--destructive-foreground`
-- `--border`, `--input`, `--ring`
-
-### 5. 表单开发
-
-推荐使用 `react-hook-form` + `zod` 进行表单开发：
-
-```tsx
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-
-const formSchema = z.object({
-  username: z.string().min(2, '用户名至少 2 个字符'),
-  email: z.string().email('请输入有效的邮箱'),
-});
-
-export default function MyForm() {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: { username: '', email: '' },
-  });
-
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-  };
-
-  return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Input {...form.register('username')} />
-      <Input {...form.register('email')} />
-      <Button type="submit">提交</Button>
-    </form>
-  );
-}
-```
-
-### 6. 数据获取
-
-**服务端组件（推荐）**
-
-```tsx
-// src/app/posts/page.tsx
-async function getPosts() {
-  const res = await fetch('https://api.example.com/posts', {
-    cache: 'no-store', // 或 'force-cache'
-  });
-  return res.json();
-}
-
-export default async function PostsPage() {
-  const posts = await getPosts();
-
-  return (
-    <div>
-      {posts.map(post => (
-        <div key={post.id}>{post.title}</div>
-      ))}
-    </div>
-  );
-}
-```
-
-**客户端组件**
-
-```tsx
-'use client';
-
-import { useEffect, useState } from 'react';
-
-export default function ClientComponent() {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    fetch('/api/data')
-      .then(res => res.json())
-      .then(setData);
-  }, []);
-
-  return <div>{JSON.stringify(data)}</div>;
-}
-```
-
-## 常见开发场景
-
-### 添加新页面
-
-1. 在 `src/app/` 下创建文件夹和 `page.tsx`
-2. 使用 shadcn 组件构建 UI
-3. 根据需要添加 `layout.tsx` 和 `loading.tsx`
-
-### 创建业务组件
-
-1. 在 `src/components/` 下创建组件文件（非 UI 组件）
-2. 优先组合使用 `src/components/ui/` 中的基础组件
-3. 使用 TypeScript 定义 Props 类型
-
-### 添加全局状态
-
-推荐使用 React Context 或 Zustand：
-
-```tsx
-// src/lib/store.ts
-import { create } from 'zustand';
-
-interface Store {
-  count: number;
-  increment: () => void;
-}
-
-export const useStore = create<Store>((set) => ({
-  count: 0,
-  increment: () => set((state) => ({ count: state.count + 1 })),
-}));
-```
-
-### 集成数据库
-
-推荐使用 Prisma 或 Drizzle ORM，在 `src/lib/db.ts` 中配置。
-
-## 技术栈
-
-- **框架**: Next.js 16.1.1 (App Router)
-- **UI 组件**: shadcn/ui (基于 Radix UI)
-- **样式**: Tailwind CSS v4
-- **表单**: React Hook Form + Zod
-- **图标**: Lucide React
-- **字体**: Geist Sans & Geist Mono
-- **包管理器**: pnpm 9+
-- **TypeScript**: 5.x
-
-## 参考文档
-
-- [Next.js 官方文档](https://nextjs.org/docs)
-- [shadcn/ui 组件文档](https://ui.shadcn.com)
-- [Tailwind CSS 文档](https://tailwindcss.com/docs)
-- [React Hook Form](https://react-hook-form.com)
-
-## 重要提示
-
-1. **必须使用 pnpm** 作为包管理器
-2. **优先使用 shadcn/ui 组件** 而不是从零开发基础组件
-3. **遵循 Next.js App Router 规范**，正确区分服务端/客户端组件
-4. **使用 TypeScript** 进行类型安全开发
-5. **使用 `@/` 路径别名** 导入模块（已配置）
+本项目为 AIY 黑客松参赛作品，作品归团队所有，组委会仅作收录与展示。

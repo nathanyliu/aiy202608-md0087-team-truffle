@@ -10,9 +10,16 @@ __pycache__/
 *.a
 /vendor
 *.egg-info/
-/.env
+# Environment variables and secrets
 .env
-.cozeproj/reduction
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets.*
+*.secret
+
+# Logs
 
 # JS/TS bundlers & build outputs
 .next
