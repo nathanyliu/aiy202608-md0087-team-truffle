@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   UtensilsCrossed,
@@ -480,6 +480,46 @@ export default function MealPage() {
   const [expandedSlot, setExpandedSlot] = useState<number | null>(0);
   const [expandedAnalysis, setExpandedAnalysis] = useState<number | null>(0);
 
+  // 打卡功能状态
+  const [checkedInMeals, setCheckedInMeals] = useState<string[]>([]);
+  const [checkInTarget, setCheckInTarget] = useState<{ slotIndex: number; mealName: string } | null>(null);
+  const checkInTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 双击菜品显示打卡按钮
+  const handleMealDoubleClick = (slotIndex: number, mealName: string) => {
+    // 清除之前的定时器
+    if (checkInTimerRef.current) {
+      clearTimeout(checkInTimerRef.current);
+    }
+    setCheckInTarget({ slotIndex, mealName });
+    // 5秒后自动消失
+    checkInTimerRef.current = setTimeout(() => {
+      setCheckInTarget(null);
+      checkInTimerRef.current = null;
+    }, 5000);
+  };
+
+  // 确认打卡
+  const handleCheckIn = () => {
+    if (checkInTarget) {
+      setCheckedInMeals(prev => [...prev, checkInTarget.mealName]);
+      setCheckInTarget(null);
+      if (checkInTimerRef.current) {
+        clearTimeout(checkInTimerRef.current);
+        checkInTimerRef.current = null;
+      }
+    }
+  };
+
+  // 取消打卡按钮
+  const cancelCheckIn = () => {
+    setCheckInTarget(null);
+    if (checkInTimerRef.current) {
+      clearTimeout(checkInTimerRef.current);
+      checkInTimerRef.current = null;
+    }
+  };
+
   const toggleSlot = (index: number) => {
     setExpandedSlot(expandedSlot === index ? null : index);
   };
@@ -636,34 +676,54 @@ export default function MealPage() {
 
               {isExpanded && (
                 <div className="px-4 pb-4 space-y-3 border-t border-border/40 pt-3">
-                  {slot.meals.map((meal) => (
-                    <div
-                      key={meal.name}
-                      className={`flex items-center justify-between py-2 border-b border-border/20 last:border-0 ${meal.recipe ? 'cursor-pointer hover:bg-accent/5 rounded-lg px-2 -mx-2 transition-colors' : ''}`}
-                      onClick={() => meal.recipe && setSelectedRecipe({ name: meal.name, recipe: meal.recipe })}
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-foreground">{meal.name}</span>
-                          <span className="text-xs text-muted-foreground">{meal.amount}</span>
-                          {meal.recipe && (
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-primary/10 text-primary/70">查看食谱</span>
+                  {slot.meals.filter(meal => !checkedInMeals.includes(meal.name)).map((meal) => {
+                    const showCheckInButton = checkInTarget?.slotIndex === index && checkInTarget?.mealName === meal.name;
+                    return (
+                      <div
+                        key={meal.name}
+                        className={`flex items-center justify-between py-2 border-b border-border/20 last:border-0 ${meal.recipe ? 'cursor-pointer hover:bg-accent/5 rounded-lg px-2 -mx-2 transition-colors' : ''}`}
+                        onClick={() => meal.recipe && setSelectedRecipe({ name: meal.name, recipe: meal.recipe })}
+                        onDoubleClick={(e) => {
+                          e.stopPropagation();
+                          handleMealDoubleClick(index, meal.name);
+                        }}
+                      >
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-foreground">{meal.name}</span>
+                            <span className="text-xs text-muted-foreground">{meal.amount}</span>
+                            {meal.recipe && (
+                              <span className="text-xs px-1.5 py-0.5 rounded bg-primary/10 text-primary/70">查看食谱</span>
+                            )}
+                          </div>
+                          <div className="flex gap-1.5 mt-1">
+                            {meal.tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className="text-xs px-1.5 py-0.5 rounded bg-primary/6 text-primary/70"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 ml-3">
+                          <span className="text-sm text-muted-foreground">{meal.calories}</span>
+                          {showCheckInButton && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCheckIn();
+                              }}
+                              className="px-2 py-1 text-xs rounded bg-primary text-primary-foreground hover:bg-primary/90 transition-colors animate-in fade-in"
+                            >
+                              打卡
+                            </button>
                           )}
                         </div>
-                        <div className="flex gap-1.5 mt-1">
-                          {meal.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="text-xs px-1.5 py-0.5 rounded bg-primary/6 text-primary/70"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
                       </div>
-                      <span className="text-sm text-muted-foreground ml-3">{meal.calories}</span>
-                    </div>
-                  ))}
+                    );
+                  })}
                   <div className="flex items-start gap-2 p-3 rounded-lg bg-accent/5 border border-accent/10">
                     <Leaf className="h-4 w-4 text-accent mt-0.5 shrink-0" />
                     <p className="text-xs text-foreground/80">{slot.tip}</p>
