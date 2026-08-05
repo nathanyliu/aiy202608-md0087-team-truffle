@@ -21,6 +21,13 @@ import {
   Lightbulb,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Info } from 'lucide-react';
 
 // 食物数据库
 interface FoodItem {
@@ -215,6 +222,7 @@ function SliderField({
   icon: Icon,
   leftLabel,
   rightLabel,
+  tooltip,
 }: {
   label: string;
   value: number;
@@ -224,6 +232,7 @@ function SliderField({
   icon: React.ComponentType<{ className?: string }>;
   leftLabel?: string;
   rightLabel?: string;
+  tooltip?: string;
 }) {
   return (
     <div className="space-y-2">
@@ -231,6 +240,18 @@ function SliderField({
         <div className="flex items-center gap-2">
           <Icon className="h-4 w-4 text-primary" />
           <span className="text-sm font-medium text-foreground">{label}</span>
+          {tooltip && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs whitespace-pre-line text-xs">
+                  {tooltip}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
         <span className="text-sm font-semibold text-primary">{value}/{max}</span>
       </div>
@@ -610,7 +631,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* 右侧：今日健康反馈 + 舌像 */}
+        {/* 右侧：今日健康反馈 */}
         <div className="lg:col-span-2 space-y-6">
           <div className="card-warm p-5 space-y-5">
             <div className="flex items-center gap-2 mb-1">
@@ -639,6 +660,7 @@ export default function HomePage() {
                 icon={Moon}
                 leftLabel="1分"
                 rightLabel="5分"
+                tooltip={"1分 - 失眠/多梦：入睡困难，频繁醒来，醒后疲惫\n2分 - 较差：睡眠浅，易惊醒，白天精神不佳\n3分 - 一般：睡眠尚可，偶有中途醒来\n4分 - 良好：入睡顺利，夜间少醒，醒来精神\n5分 - 优秀：一夜安睡到天亮，精力充沛"}
               />
             </div>
 
