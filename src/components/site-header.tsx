@@ -60,11 +60,12 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-1 px-2 py-1.5 rounded-md text-xs transition-colors',
-                  isActive ? 'text-primary font-semibold' : 'text-muted-foreground'
+                  'flex flex-col items-center gap-0.5 px-2 py-1 rounded-md transition-colors min-w-[3.5rem]',
+                  isActive ? 'text-primary' : 'text-muted-foreground'
                 )}
               >
-                <Icon className="h-3.5 w-3.5" />
+                <Icon className="h-4 w-4" />
+                <span className="text-[10px] leading-tight">{item.label}</span>
               </Link>
             );
           })}

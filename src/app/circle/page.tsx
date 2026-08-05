@@ -254,6 +254,12 @@ export default function CirclePage() {
   const [selectedRecipe, setSelectedRecipe] = useState<CommunityRecipe | null>(null);
   const [addedRecipes, setAddedRecipes] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [favorites, setFavorites] = useState<number[]>(() => {
+    if (typeof window === 'undefined') return [];
+    const saved = localStorage.getItem('recipeFavorites');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const toggleLike = (id: number) => {
     // In a real app this would update state
@@ -266,7 +272,17 @@ export default function CirclePage() {
     );
   };
 
+  const toggleFavorite = (id: number) => {
+    setFavorites((prev) => {
+      const newFavorites = prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id];
+      localStorage.setItem('recipeFavorites', JSON.stringify(newFavorites));
+      return newFavorites;
+    });
+  };
+
   const filtered = recipes.filter((r) => {
+    // 如果显示收藏夹，只显示收藏的食谱
+    if (showFavorites && !favorites.includes(r.id)) return false;
     const matchTopic = !activeTopic || r.tags.some((t) => t.includes(activeTopic));
     const matchSearch =
       !searchQuery ||
@@ -280,14 +296,34 @@ export default function CirclePage() {
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-6 space-y-6">
       {/* 页面标题 */}
       <div className="card-warm p-5">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-            <Users className="h-5 w-5 text-primary" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+              <Users className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="font-serif-cn text-xl font-bold">食方社区</h1>
+              <p className="text-xs text-muted-foreground">分享自制食谱，让 AI 融入你的专属食养方案</p>
+            </div>
           </div>
-          <div>
-            <h1 className="font-serif-cn text-xl font-bold">食方社区</h1>
-            <p className="text-xs text-muted-foreground">分享自制食谱，让 AI 融入你的专属食养方案</p>
-          </div>
+          {/* 收藏夹切换 */}
+          <button
+            onClick={() => setShowFavorites(!showFavorites)}
+            className={cn(
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all duration-200 border',
+              showFavorites
+                ? 'bg-rose-50 text-rose-600 border-rose-200'
+                : 'bg-background text-muted-foreground hover:text-rose-500 border-border'
+            )}
+          >
+            <Heart className={cn('h-4 w-4', showFavorites && 'fill-current')} />
+            <span className="hidden sm:inline">收藏夹</span>
+            {favorites.length > 0 && (
+              <span className="text-xs bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full">
+                {favorites.length}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* 搜索 */}
@@ -333,7 +369,24 @@ export default function CirclePage() {
         </div>
       )}
 
+      {/* 收藏夹标题 */}
+      {showFavorites && (
+        <div className="flex items-center gap-2">
+          <Heart className="h-4 w-4 text-rose-500 fill-current" />
+          <span className="text-sm font-medium text-foreground">我的收藏</span>
+          <span className="text-xs text-muted-foreground">({favorites.length} 道食谱)</span>
+        </div>
+      )}
+
       {/* 食谱卡片列表 */}
+      {filtered.length === 0 ? (
+        <div className="card-warm p-8 text-center">
+          <Heart className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground">
+            {showFavorites ? '还没有收藏的食谱，去浏览社区收藏喜欢的吧' : '没有找到匹配的食谱'}
+          </p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filtered.map((recipe) => (
           <div key={recipe.id} className="card-warm overflow-hidden group">
@@ -374,25 +427,39 @@ export default function CirclePage() {
                   </span>
                 ))}
               </div>
-              <button
-                onClick={() => addToMealPlan(recipe.id)}
-                className={cn(
-                  'flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-200',
-                  addedRecipes.includes(recipe.id)
-                    ? 'bg-primary/10 text-primary border border-primary/20'
-                    : 'bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground'
-                )}
-              >
-                {addedRecipes.includes(recipe.id) ? (
-                  <>
-                    <Check className="h-3 w-3" />已加入
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-3 w-3" />加入食方
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => toggleFavorite(recipe.id)}
+                  className={cn(
+                    'flex items-center gap-1 px-2 py-1 rounded-lg text-xs transition-all duration-200',
+                    favorites.includes(recipe.id)
+                      ? 'text-rose-500'
+                      : 'text-muted-foreground hover:text-rose-400'
+                  )}
+                  title={favorites.includes(recipe.id) ? '取消收藏' : '收藏'}
+                >
+                  <Heart className={cn('h-3.5 w-3.5', favorites.includes(recipe.id) && 'fill-current')} />
+                </button>
+                <button
+                  onClick={() => addToMealPlan(recipe.id)}
+                  className={cn(
+                    'flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-200',
+                    addedRecipes.includes(recipe.id)
+                      ? 'bg-primary/10 text-primary border border-primary/20'
+                      : 'bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground'
+                  )}
+                >
+                  {addedRecipes.includes(recipe.id) ? (
+                    <>
+                      <Check className="h-3 w-3" />已加入
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-3 w-3" />加入食方
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* 作者和互动 */}
@@ -422,12 +489,6 @@ export default function CirclePage() {
           </div>
         ))}
       </div>
-
-      {filtered.length === 0 && (
-        <div className="text-center py-12">
-          <Users className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-          <p className="text-sm text-muted-foreground">暂无相关食谱</p>
-        </div>
       )}
 
       {/* 食谱详情弹窗 */}

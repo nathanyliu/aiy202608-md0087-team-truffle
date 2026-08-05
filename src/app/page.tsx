@@ -19,6 +19,9 @@ import {
   Trash2,
   AlertTriangle,
   Lightbulb,
+  Utensils,
+  MapPin,
+  Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -486,6 +489,85 @@ export default function HomePage() {
   };
 
   const conflicts = detectConflicts();
+
+  // 欢迎页面状态
+  const [showWelcome, setShowWelcome] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return !localStorage.getItem('hasVisited');
+  });
+
+  const handleStart = () => {
+    localStorage.setItem('hasVisited', 'true');
+    setShowWelcome(false);
+  };
+
+  // 欢迎页面
+  if (showWelcome) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-8">
+        <div className="max-w-4xl w-full space-y-8 text-center">
+          {/* 标题区域 */}
+          <div className="space-y-4">
+            <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-accent/20 to-primary/10">
+              <Leaf className="h-10 w-10 text-accent" />
+            </div>
+            <h1 className="font-serif-cn text-4xl sm:text-5xl font-bold text-foreground">
+              优基食养小厨房
+            </h1>
+            <p className="text-lg text-muted-foreground">每天一张会思考的餐单</p>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              基于时令节气与个人体质，为您定制专属食养方案
+            </p>
+          </div>
+
+          {/* 功能介绍卡片 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+            <div className="card-warm p-5 space-y-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 mx-auto">
+                <Heart className="h-5 w-5 text-accent" />
+              </div>
+              <h3 className="font-serif-cn font-semibold text-foreground">健康档案</h3>
+              <p className="text-xs text-muted-foreground">记录体质信息，AI 智能分析您的营养需求</p>
+            </div>
+            <div className="card-warm p-5 space-y-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 mx-auto">
+                <Utensils className="h-5 w-5 text-primary" />
+              </div>
+              <h3 className="font-serif-cn font-semibold text-foreground">今日食方</h3>
+              <p className="text-xs text-muted-foreground">个性化餐单推荐，营养分析一目了然</p>
+            </div>
+            <div className="card-warm p-5 space-y-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 mx-auto">
+                <MapPin className="h-5 w-5 text-amber-600" />
+              </div>
+              <h3 className="font-serif-cn font-semibold text-foreground">食养地图</h3>
+              <p className="text-xs text-muted-foreground">深圳认证素食餐厅，一键导航</p>
+            </div>
+            <div className="card-warm p-5 space-y-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 mx-auto">
+                <Users className="h-5 w-5 text-rose-500" />
+              </div>
+              <h3 className="font-serif-cn font-semibold text-foreground">食方社区</h3>
+              <p className="text-xs text-muted-foreground">浏览社区食谱，收藏喜欢的菜品</p>
+            </div>
+          </div>
+
+          {/* 开始按钮 */}
+          <div className="pt-4">
+            <button
+              onClick={handleStart}
+              className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all hover:scale-105"
+            >
+              开始使用
+            </button>
+            <p className="text-xs text-muted-foreground mt-3">
+              首次使用请填写健康档案，以便生成个性化餐单
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 space-y-6">
