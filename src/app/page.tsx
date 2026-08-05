@@ -554,14 +554,16 @@ export default function HomePage() {
               icon={Brain}
             />
 
-            {/* 今日训练 */}
-            <SelectGroup
-              label="今日训练"
-              options={['休息日', '力量训练', '有氧', '高强度间歇']}
-              value={todayTrain}
-              onChange={setTodayTrain}
-              icon={Dumbbell}
-            />
+            {/* 今日训练 - 仅在选择了运动频率时显示 */}
+            {trainFreq !== '不运动' && (
+              <SelectGroup
+                label="今日训练"
+                options={['休息日', '力量训练', '有氧', '高强度间歇']}
+                value={todayTrain}
+                onChange={setTodayTrain}
+                icon={Dumbbell}
+              />
+            )}
 
             {/* 备注 */}
             <div className="space-y-1.5">
