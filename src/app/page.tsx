@@ -521,9 +521,17 @@ export default function HomePage() {
                 type="number"
                 placeholder="请输入年龄"
                 value={age}
-                onChange={(e) => setAge(e.target.value)}
+                min={1}
+                max={120}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '') { setAge(''); return; }
+                  const num = parseInt(val, 10);
+                  if (num >= 1 && num <= 120) setAge(val);
+                }}
                 className="input-warm"
               />
+              <p className="text-xs text-muted-foreground">范围：1-120岁</p>
             </div>
 
             {/* 性别 */}
@@ -542,9 +550,17 @@ export default function HomePage() {
                 type="number"
                 placeholder="请输入身高"
                 value={height}
-                onChange={(e) => setHeight(e.target.value)}
+                min={50}
+                max={250}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '') { setHeight(''); return; }
+                  const num = parseFloat(val);
+                  if (num >= 50 && num <= 250) setHeight(val);
+                }}
                 className="input-warm"
               />
+              <p className="text-xs text-muted-foreground">范围：50-250cm</p>
             </div>
 
             {/* 体重 */}
@@ -554,9 +570,17 @@ export default function HomePage() {
                 type="number"
                 placeholder="请输入体重"
                 value={weight}
-                onChange={(e) => setWeight(e.target.value)}
+                min={10}
+                max={300}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '') { setWeight(''); return; }
+                  const num = parseFloat(val);
+                  if (num >= 10 && num <= 300) setWeight(val);
+                }}
                 className="input-warm"
               />
+              <p className="text-xs text-muted-foreground">范围：10-300kg</p>
             </div>
 
             {/* 健身目标 */}
