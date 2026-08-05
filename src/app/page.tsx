@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Leaf,
@@ -497,11 +497,18 @@ export default function HomePage() {
 
   const conflicts = detectConflicts();
 
-  // 欢迎页面状态
-  const [showWelcome, setShowWelcome] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return !localStorage.getItem('hasVisited');
-  });
+  // 欢迎页面状态 - 初始始终显示欢迎页，避免服务端/客户端渲染不一致导致闪烁
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 组件挂载后检查是否已访问过
+  useEffect(() => {
+    setIsMounted(true);
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (hasVisited) {
+      setShowWelcome(false);
+    }
+  }, []);
 
   const handleStart = () => {
     localStorage.setItem('hasVisited', 'true');
