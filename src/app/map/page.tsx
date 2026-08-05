@@ -1,130 +1,201 @@
 'use client';
 
 import { useState } from 'react';
-import { MapPin, Search, Leaf, Star, Navigation, ChevronRight, Compass } from 'lucide-react';
+import { MapPin, Search, Navigation, Star, Phone, Shield, Leaf, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface FoodPlace {
+interface Restaurant {
   id: number;
   name: string;
-  location: string;
-  specialty: string;
+  address: string;
+  phone: string;
+  type: '素食' | '沙拉';
   rating: number;
-  distance: string;
   tags: string[];
-  season: string;
+  verified: boolean;
+  lat: number;
+  lng: number;
   emoji: string;
 }
 
-const regions = ['全部', '华东', '华南', '华北', '西南', '西北', '东北', '华中'];
+const districts = ['全部', '福田区', '南山区', '罗湖区', '宝安区', '龙华区', '龙岗区'];
 
-const places: FoodPlace[] = [
+const restaurants: Restaurant[] = [
   {
     id: 1,
-    name: '宁夏中宁枸杞基地',
-    location: '宁夏中卫市中宁县',
-    specialty: '枸杞',
-    rating: 4.9,
-    distance: '1200km',
-    tags: ['道地药材', 'GAP认证', '源头直供'],
-    season: '6-10月',
-    emoji: '🫐',
+    name: '青蔬素食·福田店',
+    address: '深圳市福田区益田路卓越世纪中心B1层',
+    phone: '0755-8288xxxx',
+    type: '素食',
+    rating: 4.8,
+    tags: ['有机食材', '无五辛', '药膳养生'],
+    verified: true,
+    lat: 22.5331,
+    lng: 114.0595,
+    emoji: '🥬',
   },
   {
     id: 2,
-    name: '河南焦作铁棍山药',
-    location: '河南省焦作市温县',
-    specialty: '山药',
-    rating: 4.8,
-    distance: '800km',
-    tags: ['地理标志', '垆土种植', '药食同源'],
-    season: '10-12月',
-    emoji: '🥔',
+    name: 'Green Salad 绿沙轻食',
+    address: '深圳市南山区科技园南区深南大道9966号',
+    phone: '0755-8632xxxx',
+    type: '沙拉',
+    rating: 4.7,
+    tags: ['低卡', '高蛋白', '进口蔬菜'],
+    verified: true,
+    lat: 22.5362,
+    lng: 113.9454,
+    emoji: '🥗',
   },
   {
     id: 3,
-    name: '云南文山三七庄园',
-    location: '云南省文山壮族苗族自治州',
-    specialty: '三七',
-    rating: 4.7,
-    distance: '2100km',
-    tags: ['道地药材', '有机种植', '三年以上'],
-    season: '全年',
-    emoji: '🌿',
+    name: '素心阁·素食餐厅',
+    address: '深圳市罗湖区东门南路3009号金城大厦2楼',
+    phone: '0755-2518xxxx',
+    type: '素食',
+    rating: 4.9,
+    tags: ['佛教素食', '自助素餐', '养生汤品'],
+    verified: true,
+    lat: 22.5483,
+    lng: 114.1212,
+    emoji: '🍃',
   },
   {
     id: 4,
-    name: '福建福鼎白茶核心产区',
-    location: '福建省宁德市福鼎市',
-    specialty: '白茶',
-    rating: 4.9,
-    distance: '1000km',
-    tags: ['核心产区', '传统工艺', '高山茶园'],
-    season: '3-5月',
-    emoji: '🍵',
+    name: 'Bowl 沙拉碗·南山店',
+    address: '深圳市南山区海德三道海岸城东区B座1层',
+    phone: '0755-8635xxxx',
+    type: '沙拉',
+    rating: 4.6,
+    tags: ['超级食物', '定制沙拉', '冷压果汁'],
+    verified: true,
+    lat: 22.5175,
+    lng: 113.9386,
+    emoji: '🥑',
   },
   {
     id: 5,
-    name: '青海柴达木黑枸杞',
-    location: '青海省海西蒙古族藏族自治州',
-    specialty: '黑枸杞',
+    name: '一叶一世界·藏茶素食',
+    address: '深圳市福田区车公庙泰然九路海松大厦B座1层',
+    phone: '0755-8343xxxx',
+    type: '素食',
     rating: 4.8,
-    distance: '1800km',
-    tags: ['野生采集', '花青素之王', '高原纯净'],
-    season: '7-9月',
-    emoji: '🫐',
+    tags: ['禅意空间', '藏茶', '创意素食'],
+    verified: true,
+    lat: 22.5389,
+    lng: 114.0234,
+    emoji: '🌿',
   },
   {
     id: 6,
-    name: '云南罗平生姜基地',
-    location: '云南省曲靖市罗平县',
-    specialty: '小黄姜',
-    rating: 4.6,
-    distance: '1900km',
-    tags: ['有机种植', '姜辣素高', '驱寒良品'],
-    season: '10-12月',
-    emoji: '🫚',
+    name: '超级碗 Superbowl·宝安店',
+    address: '深圳市宝安区新安街道海旺社区海滨广场B1层',
+    phone: '0755-2778xxxx',
+    type: '沙拉',
+    rating: 4.5,
+    tags: ['谷物碗', '植物蛋白', '无麸质可选'],
+    verified: true,
+    lat: 22.5554,
+    lng: 113.8832,
+    emoji: '🥙',
   },
   {
     id: 7,
-    name: '山东东阿阿胶原产地',
-    location: '山东省聊城市东阿县',
-    specialty: '阿胶',
-    rating: 4.8,
-    distance: '600km',
-    tags: ['千年传承', '驴皮熬制', '补血圣品'],
-    season: '全年',
-    emoji: '🏭',
+    name: '静莲斋·素食馆',
+    address: '深圳市龙华区民治街道星河COCO City 3楼',
+    phone: '0755-2812xxxx',
+    type: '素食',
+    rating: 4.7,
+    tags: ['家常素菜', '素火锅', '菌菇汤'],
+    verified: true,
+    lat: 22.6253,
+    lng: 114.0356,
+    emoji: '🪷',
   },
   {
     id: 8,
-    name: '新疆若羌红枣庄园',
-    location: '新疆巴音郭楞蒙古自治州若羌县',
-    specialty: '红枣',
+    name: 'Fresh 鲜沙拉·龙岗店',
+    address: '深圳市龙岗区龙城街道万科广场4楼L4-018',
+    phone: '0755-8932xxxx',
+    type: '沙拉',
+    rating: 4.6,
+    tags: ['当日现做', '有机蔬菜', '低碳水'],
+    verified: true,
+    lat: 22.7201,
+    lng: 114.2468,
+    emoji: '🥬',
+  },
+  {
+    id: 9,
+    name: '慈心素食·罗湖店',
+    address: '深圳市罗湖区红荔路园岭新村商铺102号',
+    phone: '0755-2587xxxx',
+    type: '素食',
+    rating: 4.8,
+    tags: ['老字号', '素包子', '养生粥'],
+    verified: true,
+    lat: 22.5568,
+    lng: 114.1089,
+    emoji: '🌱',
+  },
+  {
+    id: 10,
+    name: '沙拉日记 Salad Diary',
+    address: '深圳市南山区蛇口海上世界文化艺术中心1层',
+    phone: '0755-8629xxxx',
+    type: '沙拉',
     rating: 4.7,
-    distance: '2800km',
-    tags: ['灰枣之王', '日照充足', '自然晾干'],
-    season: '10-11月',
-    emoji: '🫘',
+    tags: ['海景餐厅', '地中海风', '鲜榨果汁'],
+    verified: true,
+    lat: 22.4856,
+    lng: 113.9234,
+    emoji: '🥗',
   },
 ];
 
-export default function MapPage() {
-  const [activeRegion, setActiveRegion] = useState('全部');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedPlace, setSelectedPlace] = useState<FoodPlace | null>(null);
+function openInMap(name: string, address: string) {
+  const query = encodeURIComponent(`${name} ${address}`);
+  // 尝试打开设备默认地图应用
+  // iOS: maps://  Apple Maps
+  // Android: geo:  或 intent:
+  // 通用: 高德地图 URI
+  const amapUrl = `https://uri.amap.com/search?keyword=${query}&city=深圳`;
+  const appleUrl = `maps://maps.apple.com/?q=${query}`;
+  const geoUrl = `geo:0,0?q=${query}`;
 
-  const filtered = places.filter((p) => {
+  // 检测平台
+  const ua = navigator.userAgent.toLowerCase();
+  if (/iphone|ipad|ipod/.test(ua)) {
+    // iOS: 尝试 Apple Maps
+    window.open(appleUrl, '_blank');
+  } else if (/android/.test(ua)) {
+    // Android: 使用 geo URI
+    window.open(geoUrl, '_blank');
+  } else {
+    // 桌面端: 使用高德地图网页版
+    window.open(amapUrl, '_blank');
+  }
+}
+
+export default function MapPage() {
+  const [activeDistrict, setActiveDistrict] = useState('全部');
+  const [activeType, setActiveType] = useState<'全部' | '素食' | '沙拉'>('全部');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filtered = restaurants.filter((r) => {
+    const matchDistrict =
+      activeDistrict === '全部' || r.address.includes(activeDistrict.replace('区', ''));
+    const matchType = activeType === '全部' || r.type === activeType;
     const matchSearch =
       !searchQuery ||
-      p.name.includes(searchQuery) ||
-      p.specialty.includes(searchQuery) ||
-      p.location.includes(searchQuery);
-    return matchSearch;
+      r.name.includes(searchQuery) ||
+      r.address.includes(searchQuery) ||
+      r.tags.some((t) => t.includes(searchQuery));
+    return matchDistrict && matchType && matchSearch;
   });
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 space-y-6">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 py-6 space-y-6">
       {/* 页面标题 */}
       <div className="card-warm p-5">
         <div className="flex items-center gap-3 mb-4">
@@ -133,8 +204,16 @@ export default function MapPage() {
           </div>
           <div>
             <h1 className="font-serif-cn text-xl font-bold">食养地图</h1>
-            <p className="text-xs text-muted-foreground">寻味中国，道地食材产地溯源</p>
+            <p className="text-xs text-muted-foreground">深圳 · 认证素食沙拉餐厅导航</p>
           </div>
+        </div>
+
+        {/* 认证说明 */}
+        <div className="flex items-center gap-2 p-2.5 rounded-lg bg-primary/5 border border-primary/10 mb-4">
+          <Shield className="h-4 w-4 text-primary shrink-0" />
+          <p className="text-xs text-foreground/80">
+            所有餐厅均经过卫生资质认证，定期审核，确保食品安全与环境整洁
+          </p>
         </div>
 
         {/* 搜索 */}
@@ -142,129 +221,128 @@ export default function MapPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="搜索产地、食材、省份..."
+            placeholder="搜索餐厅名称、地址、标签..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="input-warm pl-9"
           />
         </div>
 
-        {/* 区域筛选 */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          <Compass className="h-4 w-4 text-muted-foreground shrink-0" />
-          {regions.map((region) => (
+        {/* 类型筛选 */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-xs text-muted-foreground shrink-0">类型:</span>
+          {(['全部', '素食', '沙拉'] as const).map((type) => (
             <button
-              key={region}
-              onClick={() => setActiveRegion(region)}
+              key={type}
+              onClick={() => setActiveType(type)}
               className={cn(
-                'px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-200 border',
-                activeRegion === region
+                'px-3 py-1.5 rounded-full text-sm transition-all duration-200 border',
+                activeType === type
                   ? 'bg-primary/10 border-primary/30 text-primary font-medium'
                   : 'bg-background border-border text-muted-foreground hover:border-primary/20'
               )}
             >
-              {region}
+              {type === '素食' ? '🌱 素食' : type === '沙拉' ? '🥗 沙拉' : '全部'}
+            </button>
+          ))}
+        </div>
+
+        {/* 区域筛选 */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          <span className="text-xs text-muted-foreground shrink-0">区域:</span>
+          {districts.map((district) => (
+            <button
+              key={district}
+              onClick={() => setActiveDistrict(district)}
+              className={cn(
+                'px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-200 border',
+                activeDistrict === district
+                  ? 'bg-primary/10 border-primary/30 text-primary font-medium'
+                  : 'bg-background border-border text-muted-foreground hover:border-primary/20'
+              )}
+            >
+              {district}
             </button>
           ))}
         </div>
       </div>
 
-      {/* 地图可视化区域 */}
-      <div className="card-warm p-6">
-        <div className="relative h-64 sm:h-80 bg-muted/30 rounded-xl flex items-center justify-center overflow-hidden">
-          {/* 简化的中国地图示意 */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative w-full h-full max-w-md">
-              {/* 地图上的点 */}
-              {places.map((place, i) => {
-                const positions = [
-                  { top: '30%', left: '25%' },
-                  { top: '45%', left: '55%' },
-                  { top: '60%', left: '35%' },
-                  { top: '55%', left: '70%' },
-                  { top: '25%', left: '30%' },
-                  { top: '65%', left: '40%' },
-                  { top: '40%', left: '60%' },
-                  { top: '35%', left: '20%' },
-                ];
-                const pos = positions[i % positions.length];
-                return (
-                  <button
-                    key={place.id}
-                    onClick={() => setSelectedPlace(place)}
-                    className={cn(
-                      'absolute flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 hover:scale-125',
-                      selectedPlace?.id === place.id
-                        ? 'bg-primary text-primary-foreground shadow-lg scale-125 z-10'
-                        : 'bg-primary/20 text-primary hover:bg-primary/30'
-                    )}
-                    style={{ top: pos.top, left: pos.left }}
-                    title={place.name}
-                  >
-                    <span className="text-sm">{place.emoji}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          <p className="absolute bottom-3 right-3 text-xs text-muted-foreground/50">
-            点击标记查看详情
-          </p>
-        </div>
-      </div>
-
-      {/* 产地列表 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {filtered.map((place) => (
-          <button
-            key={place.id}
-            onClick={() => setSelectedPlace(place)}
-            className={cn(
-              'card-warm p-4 text-left transition-all duration-200',
-              selectedPlace?.id === place.id && 'ring-2 ring-primary/30 border-primary/30'
-            )}
-          >
-            <div className="flex items-start gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted/50 shrink-0">
-                <span className="text-2xl">{place.emoji}</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-sm font-medium text-foreground truncate">{place.name}</h3>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+      {/* 餐厅列表 */}
+      <div className="space-y-3">
+        {filtered.map((restaurant) => (
+          <div key={restaurant.id} className="card-warm p-4 space-y-3">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-3 flex-1">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted/40 shrink-0 text-2xl">
+                  {restaurant.emoji}
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
-                  <MapPin className="h-3 w-3" />
-                  {place.location}
-                </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="flex items-center gap-0.5">
-                    <Star className="h-3 w-3 fill-chart-3 text-chart-3" />
-                    <span className="text-xs">{place.rating}</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">·</span>
-                  <span className="text-xs text-muted-foreground">当季: {place.season}</span>
-                </div>
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {place.tags.map((tag) => (
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-medium text-foreground truncate">
+                      {restaurant.name}
+                    </h3>
                     <span
-                      key={tag}
-                      className="text-xs px-1.5 py-0.5 rounded bg-primary/6 text-primary/70"
+                      className={cn(
+                        'text-xs px-1.5 py-0.5 rounded-full',
+                        restaurant.type === '素食'
+                          ? 'bg-primary/10 text-primary'
+                          : 'bg-chart-4/10 text-chart-4'
+                      )}
                     >
-                      {tag}
+                      {restaurant.type}
                     </span>
-                  ))}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                    <MapPin className="h-3 w-3 shrink-0" />
+                    <span className="truncate">{restaurant.address}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                    <Phone className="h-3 w-3 shrink-0" />
+                    <span>{restaurant.phone}</span>
+                  </div>
                 </div>
               </div>
+              <div className="flex items-center gap-0.5 shrink-0 ml-2">
+                <Star className="h-4 w-4 fill-chart-3 text-chart-3" />
+                <span className="text-sm font-medium">{restaurant.rating}</span>
+              </div>
             </div>
-          </button>
+
+            {/* 标签 */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {restaurant.verified && (
+                <span className="flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded bg-primary/8 text-primary">
+                  <Shield className="h-3 w-3" />
+                  卫生认证
+                </span>
+              )}
+              {restaurant.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs px-1.5 py-0.5 rounded bg-muted text-muted-foreground"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* 导航按钮 */}
+            <button
+              onClick={() => openInMap(restaurant.name, restaurant.address)}
+              className="w-full py-2.5 rounded-lg bg-primary/10 hover:bg-primary/15 text-primary text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+            >
+              <Navigation className="h-4 w-4" />
+              导航到此餐厅
+              <ExternalLink className="h-3 w-3" />
+            </button>
+          </div>
         ))}
       </div>
 
       {filtered.length === 0 && (
         <div className="text-center py-12">
           <MapPin className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-          <p className="text-sm text-muted-foreground">暂无符合条件的产地</p>
+          <p className="text-sm text-muted-foreground">暂无符合条件的餐厅</p>
         </div>
       )}
     </div>
