@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   UtensilsCrossed,
   Sun,
@@ -169,12 +170,35 @@ const personalAnalysis = [
 ];
 
 export default function MealPage() {
+  const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const generated = localStorage.getItem('mealPlanGenerated');
+    if (!generated) {
+      router.replace('/');
+    } else {
+      setIsReady(true);
+    }
+  }, [router]);
+
   const [expandedSlot, setExpandedSlot] = useState<number | null>(0);
   const [expandedAnalysis, setExpandedAnalysis] = useState<number | null>(0);
 
   const toggleSlot = (index: number) => {
     setExpandedSlot(expandedSlot === index ? null : index);
   };
+
+  if (!isReady) {
+    return (
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-12 flex flex-col items-center justify-center gap-3">
+        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center animate-pulse">
+          <Sparkles className="h-5 w-5 text-primary" />
+        </div>
+        <p className="text-sm text-muted-foreground">请先在首页填写健康档案并生成营养方案</p>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 py-6 space-y-6">

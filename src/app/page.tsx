@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Leaf,
   Sun,
@@ -154,6 +155,7 @@ function SelectGroup({
 }
 
 export default function HomePage() {
+  const router = useRouter();
   const info = getSeasonInfo();
 
   // 基础健康档案
@@ -449,9 +451,15 @@ export default function HomePage() {
           {/* 生成餐单按钮 */}
           <div className="card-warm p-5">
             {isProfileComplete ? (
-              <button className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+              <button
+                onClick={() => {
+                  localStorage.setItem('mealPlanGenerated', 'true');
+                  router.push('/meal');
+                }}
+                className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              >
                 <Sparkles className="h-4 w-4" />
-                生成今日食养方案
+                生成营养方案
                 <ChevronRight className="h-4 w-4" />
               </button>
             ) : (
