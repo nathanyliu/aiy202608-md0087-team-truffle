@@ -270,6 +270,13 @@ function SliderField({
         />
         {rightLabel && <span className="text-xs text-muted-foreground whitespace-nowrap">{rightLabel}</span>}
       </div>
+
+      {/* AI 生成声明 */}
+      <div className="text-center py-4 border-t border-border/30">
+        <p className="text-xs text-muted-foreground">
+          本页面内容由 AI 智能生成，仅供参考。如有特殊健康状况，请咨询专业医师。
+        </p>
+      </div>
     </div>
   );
 }
