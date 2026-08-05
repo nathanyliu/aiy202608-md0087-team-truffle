@@ -18,6 +18,8 @@ import {
   Search,
   UtensilsCrossed,
   Trash2,
+  AlertTriangle,
+  Lightbulb,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -357,6 +359,114 @@ export default function HomePage() {
     ...foodDatabase.flatMap(c => c.foods).filter(f => selectedFoods.includes(f.id)),
     ...customFoods,
   ];
+
+  // 偏好冲突检测
+  const detectConflicts = () => {
+    const conflicts: { type: string; message: string; suggestion: string; foods: string[] }[] = [];
+
+    if (allSelectedFoods.length === 0) return conflicts;
+
+    // 计算总营养摄入
+    const totalCalories = allSelectedFoods.reduce((sum, f) => sum + f.calories, 0);
+    const totalProtein = allSelectedFoods.reduce((sum, f) => sum + (f.protein || 0), 0);
+    const totalFat = allSelectedFoods.reduce((sum, f) => sum + (f.fat || 0), 0);
+
+    // 计算BMI和目标热量
+    const heightNum = Number(height) || 0;
+    const weightNum = Number(weight) || 0;
+    const heightM = heightNum / 100;
+    const bmi = heightM > 0 ? weightNum / (heightM * heightM) : 0;
+    let targetCalories = 2000;
+    if (gender === 'male') targetCalories = 2400;
+    if (fitnessGoal === '减脂') targetCalories -= 500;
+    if (fitnessGoal === '增肌') targetCalories += 300;
+
+    // 冲突1：减脂目标但选择高热量食物
+    if (fitnessGoal === '减脂' && totalCalories > targetCalories * 0.6) {
+      const highCalFoods = allSelectedFoods.filter(f => f.calories > 200).map(f => f.name);
+      if (highCalFoods.length > 0) {
+        conflicts.push({
+          type: '热量超标',
+          message: `您的目标是减脂，但所选食物热量偏高（${totalCalories}kcal），可能不利于减脂`,
+          suggestion: '建议替换为低热量高纤维食物，如：黄瓜、西红柿、魔芋、菌菇类',
+          foods: highCalFoods,
+        });
+      }
+    }
+
+    // 冲突2：增肌目标但蛋白质不足
+    if (fitnessGoal === '增肌' && totalProtein < weightNum * 1.2) {
+      conflicts.push({
+        type: '蛋白质不足',
+        message: `增肌需要充足蛋白质（建议每日 ${Math.round(weightNum * 1.6)}g），当前所选仅 ${totalProtein}g`,
+        suggestion: '建议增加：鸡胸肉、鸡蛋、鱼肉、豆腐、牛奶等高蛋白食物',
+        foods: [],
+      });
+    }
+
+    // 冲突3：选择了过多高脂肪食物
+    if (totalFat > 80) {
+      const highFatFoods = allSelectedFoods.filter(f => (f.fat || 0) > 15).map(f => f.name);
+      if (highFatFoods.length > 0) {
+        conflicts.push({
+          type: '脂肪偏高',
+          message: `所选食物脂肪含量较高（${totalFat}g），长期可能影响心血管健康`,
+          suggestion: '建议用蒸煮代替油炸，选择：清蒸鱼、白灼虾、去皮鸡肉等低脂烹饪方式',
+          foods: highFatFoods,
+        });
+      }
+    }
+
+    // 冲突4：蔬菜不足
+    const vegCount = allSelectedFoods.filter(f =>
+      ['蔬菜', '菌菇类'].some(cat => {
+        const category = foodDatabase.find(c => c.name === cat);
+        return category?.foods.some(vf => vf.id === f.id);
+      })
+    ).length;
+    if (allSelectedFoods.length > 3 && vegCount < 2) {
+      conflicts.push({
+        type: '蔬菜不足',
+        message: '膳食纤维和维生素摄入可能不足，建议增加蔬菜比例',
+        suggestion: '建议每餐搭配：西兰花、菠菜、番茄、菌菇等，每日蔬菜摄入 300-500g',
+        foods: [],
+      });
+    }
+
+    // 冲突5：过敏原警告
+    if (allergies.length > 0) {
+      const allergyMap: Record<string, string[]> = {
+        '海鲜': ['虾', '三文鱼', '鱼'],
+        '坚果': ['核桃', '杏仁', '腰果', '花生'],
+        '乳制品': ['牛奶', '酸奶', '奶酪'],
+        '鸡蛋': ['鸡蛋'],
+        '大豆': ['豆腐', '豆浆', '毛豆'],
+        '麸质': ['糙米', '燕麦', '全麦面包'],
+      };
+      const conflictFoods: string[] = [];
+      const allergyList = allergies.split(/[,，、\s]+/).filter(a => a.length > 0);
+      allergyList.forEach((allergy: string) => {
+        const relatedFoods = allergyMap[allergy] || [];
+        allSelectedFoods.forEach(f => {
+          if (relatedFoods.some(rf => f.name.includes(rf))) {
+            conflictFoods.push(f.name);
+          }
+        });
+      });
+      if (conflictFoods.length > 0) {
+        conflicts.push({
+          type: '过敏风险',
+          message: `您标注的过敏原与所选食物冲突：${conflictFoods.join('、')}`,
+          suggestion: '请移除上述食物，或咨询医生后谨慎食用',
+          foods: conflictFoods,
+        });
+      }
+    }
+
+    return conflicts;
+  };
+
+  const conflicts = detectConflicts();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -819,6 +929,44 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      {/* 偏好冲突提示 */}
+      {conflicts.length > 0 && (
+        <div className="card-warm p-5 border-2 border-amber-200 bg-amber-50/50">
+          <div className="flex items-center gap-2 mb-3">
+            <AlertTriangle className="h-5 w-5 text-amber-600" />
+            <h3 className="font-serif font-semibold text-amber-800">偏好冲突提示</h3>
+            <span className="text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full">
+              {conflicts.length} 项
+            </span>
+          </div>
+          <div className="space-y-3">
+            {conflicts.map((conflict, idx) => (
+              <div key={idx} className="bg-white/60 rounded-lg p-3 border border-amber-100">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded">
+                    {conflict.type}
+                  </span>
+                </div>
+                <p className="text-sm text-foreground/80 mb-2">{conflict.message}</p>
+                <div className="flex items-start gap-1.5 text-xs text-muted-foreground">
+                  <Lightbulb className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
+                  <span>{conflict.suggestion}</span>
+                </div>
+                {conflict.foods.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {conflict.foods.map((food, i) => (
+                      <span key={i} className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">
+                        {food}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 生成营养方案按钮 */}
       <div className="card-warm p-5">
