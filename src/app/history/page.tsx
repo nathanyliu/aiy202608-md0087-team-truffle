@@ -17,15 +17,15 @@ interface UserProfile {
   height: string;
   weight: string;
   fitnessGoal: string;
-  trainingFreq: string;
+  trainFreq: string;
   allergies: string;
   sleepHours: string;
   sleepQuality: string;
-  energyLevel: string;
+  energy: number;
   muscleSoreness: string;
   digestion: string;
   mood: string;
-  todayTraining: string;
+  todayTrain: string;
   notes: string;
 }
 
@@ -51,7 +51,7 @@ function getTodayData(profile: UserProfile | null): TodayData | null {
   return {
     date: dateStr,
     sleep: parseFloat(profile.sleepHours) || 0,
-    energy: parseInt(profile.energyLevel) || 0,
+    energy: profile.energy || 0,
     digestion: digestionMap[profile.digestion] || 3,
     mood: moodMap[profile.mood] || 3,
     weight: parseFloat(profile.weight) || 0,
