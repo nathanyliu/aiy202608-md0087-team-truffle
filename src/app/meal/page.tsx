@@ -146,11 +146,19 @@ interface UserProfile {
   notes: string;
 }
 
-// 根据用户档案动态生成个性化分析
-function getPersonalAnalysis(profile: UserProfile | null) {
+// 根据用户档案和当日食谱动态生成个性化分析
+function getPersonalAnalysis(profile: UserProfile | null, mealPlan: MealSlot[]) {
   if (!profile) {
     return [];
   }
+
+  // 提取当日食谱名称
+  const breakfastNames = mealPlan.find((m: MealSlot) => m.type === '早餐')?.meals.map((i: MealItem) => i.name) || [];
+  const lunchNames = mealPlan.find((m: MealSlot) => m.type === '午餐')?.meals.map((i: MealItem) => i.name) || [];
+  const dinnerNames = mealPlan.find((m: MealSlot) => m.type === '晚餐')?.meals.map((i: MealItem) => i.name) || [];
+  const snackNames = mealPlan.find((m: MealSlot) => m.type === '加餐')?.meals.map((i: MealItem) => i.name) || [];
+  
+  const allMealNames = [...breakfastNames, ...lunchNames, ...dinnerNames, ...snackNames];
 
   const height = parseFloat(profile.height) || 0;
   const weight = parseFloat(profile.weight) || 0;
@@ -213,8 +221,8 @@ function getPersonalAnalysis(profile: UserProfile | null) {
       bgColor: 'bg-accent/10',
       items: [
         `你为${profile.gender}性，${profile.age}岁，身高${profile.height}cm，体重${profile.weight}kg，BMI ${bmi || '未知'}（${bmiCategory}）。${bmiCategory === '偏瘦' ? '体重偏低，需增加热量摄入，重点补充优质蛋白和健康脂肪' : bmiCategory === '正常' ? '体重在健康范围内，维持当前营养平衡即可' : bmiCategory === '偏胖' ? '体重略超，需适度控制热量，增加膳食纤维促进代谢' : '建议调整饮食结构，配合适量运动逐步改善'}`,
-        `消化状态为「${profile.digestion}」：${profile.digestion === '良好' ? '脾胃运化正常，可正常吸收各类营养，今日食谱涵盖多种食材以充分利用你的消化能力' : profile.digestion === '胀气' ? '脾胃气滞，建议减少豆类、洋葱等产气食物，增加陈皮、砂仁等理气食材。今日午餐的山药排骨汤中加入陈皮，有助于缓解胀气' : profile.digestion === '便秘' ? '肠道蠕动不足，今日食谱已增加粗粮（糙米）和高纤维蔬菜（西兰花、时蔬），建议每日饮水1500-2000ml' : profile.digestion === '腹泻' ? '脾胃虚弱，今日食谱以温和易消化为主，避免油腻和生冷，番茄豆腐汤和白灼虾都是温和选择' : '今日食谱以温和易消化为主，避免刺激脾胃'}`,
-        `当前大暑时节，湿热交蒸，脾胃易受困。午餐清蒸鲈鱼采用清蒸方式，保留鱼肉鲜味的同时避免油腻加重脾胃负担；山药排骨汤中山药健脾益胃，排骨提供胶原蛋白，针对性调理。晚餐番茄豆腐汤清淡开胃，适合暑热天气`,
+        `消化状态为「${profile.digestion}」：${profile.digestion === '良好' ? '脾胃运化正常，可正常吸收各类营养，今日食谱涵盖多种食材以充分利用你的消化能力' : profile.digestion === '胀气' ? '脾胃气滞，建议减少豆类、洋葱等产气食物，增加陈皮、砂仁等理气食材。今日午餐' + (lunchNames[0] || '山药排骨汤') + '中加入陈皮，有助于缓解胀气' : profile.digestion === '便秘' ? '肠道蠕动不足，今日食谱已增加粗粮（糙米）和高纤维蔬菜（西兰花、时蔬），建议每日饮水1500-2000ml' : profile.digestion === '腹泻' ? '脾胃虚弱，今日食谱以温和易消化为主，避免油腻和生冷，' + (dinnerNames[0] || '番茄豆腐汤') + '和' + (dinnerNames[1] || '白灼虾') + '都是温和选择' : '今日食谱以温和易消化为主，避免刺激脾胃'}`,
+        `当前大暑时节，湿热交蒸，脾胃易受困。午餐${lunchNames[0] || '清蒸鲈鱼'}采用清蒸方式，保留食材鲜味的同时避免油腻加重脾胃负担；${lunchNames[1] || '山药排骨汤'}健脾益胃，针对性调理。晚餐${dinnerNames[0] || '番茄豆腐汤'}清淡开胃，适合暑热天气`,
       ],
     },
     {
@@ -223,9 +231,9 @@ function getPersonalAnalysis(profile: UserProfile | null) {
       color: 'text-primary',
       bgColor: 'bg-primary/10',
       items: [
-        `今日训练安排为「${profile.todayTrain}」：${profile.todayTrain === '休息日' ? '休息日热量摄入适度下调至' + Math.round(targetCalories * 0.9) + 'kcal左右，避免多余热量堆积。但蛋白质摄入不可减少，维持肌肉量' : profile.todayTrain === '力量训练' ? '力量训练日蛋白质需求提升至每公斤体重1.8-2.0g（约' + proteinGoal + 'g），今日午餐鸡胸肉（30g蛋白）+ 晚餐白灼虾（20g蛋白）+ 早餐鸡蛋（6g蛋白）可满足需求。训练后30分钟内建议补充乳清蛋白或鸡蛋' : profile.todayTrain === '有氧' ? '有氧运动主要消耗糖原和脂肪，训练前1-2小时补充复合碳水（糙米、燕麦）提供持续能量。今日早餐红枣小米粥+糙米饭为你提供充足碳水' : '高强度训练后身体处于分解状态，需在30分钟内补充蛋白质和碳水（比例约1:3），加速恢复。今日下午茶原味坚果+枸杞菊花茶是理想的训练后补充'}`,
+        `今日训练安排为「${profile.todayTrain}」：${profile.todayTrain === '休息日' ? '休息日热量摄入适度下调至' + Math.round(targetCalories * 0.9) + 'kcal左右，避免多余热量堆积。但蛋白质摄入不可减少，维持肌肉量' : profile.todayTrain === '力量训练' ? '力量训练日蛋白质需求提升至每公斤体重1.8-2.0g（约' + proteinGoal + 'g），今日午餐' + (lunchNames[0] || '鸡胸肉') + '（30g蛋白）+ 晚餐' + (dinnerNames[1] || '白灼虾') + '（20g蛋白）+ 早餐' + (breakfastNames[1] || '鸡蛋') + '（6g蛋白）可满足需求。训练后30分钟内建议补充乳清蛋白或鸡蛋' : profile.todayTrain === '有氧' ? '有氧运动主要消耗糖原和脂肪，训练前1-2小时补充复合碳水（糙米、燕麦）提供持续能量。今日早餐' + (breakfastNames[0] || '红枣小米粥') + '+' + (lunchNames[2] || '糙米饭') + '为你提供充足碳水' : '高强度训练后身体处于分解状态，需在30分钟内补充蛋白质和碳水（比例约1:3），加速恢复。今日下午茶' + (snackNames[0] || '原味坚果') + '+' + (snackNames[1] || '枸杞菊花茶') + '是理想的训练后补充'}`,
         `训练频率为「${profile.trainFreq}」：${profile.trainFreq === '不运动' ? '基础代谢较低（约' + Math.round(bmr) + 'kcal），全天热量控制在' + targetCalories + 'kcal。蛋白质分配至每餐15-20g，避免一次性摄入过多增加肾脏负担' : profile.trainFreq === '初学者' ? '代谢逐步提升中，建议每餐蛋白质15-25g，碳水以复合碳水为主（糙米、燕麦），避免精制糖。今日食谱已按此比例分配' : profile.trainFreq === '规律训练' ? '代谢活跃，可适当增加碳水和蛋白质比例。训练日热量可达' + targetCalories + 'kcal，非训练日减少10%碳水摄入' : '高强度训练者热量需求达' + targetCalories + 'kcal，蛋白质需达' + proteinGoal + 'g/天。今日食谱已充分满足，训练后可额外补充蛋白粉'}`,
-        `肌肉酸痛状态为「${profile.muscleSoreness}」：${profile.muscleSoreness === '无' ? '身体恢复良好，维持当前营养方案即可' : profile.muscleSoreness === '轻微' ? '轻微酸痛说明肌肉正在适应，补充含镁食物（坚果、深绿蔬菜）促进肌肉放松。今日下午茶原味坚果（腰果、杏仁）富含镁元素' : profile.muscleSoreness === '明显' ? '明显酸痛需要增加抗炎食材辅助恢复，今日食谱中的三文鱼富含omega-3，具有天然抗炎作用。建议训练后冰敷酸痛部位，睡前热水泡脚' : '严重酸痛需充分休息，增加蛋白质摄入至每公斤体重2.0g，同时补充维生素C（水果）促进胶原蛋白合成，加速肌肉修复'}`,
+        `肌肉酸痛状态为「${profile.muscleSoreness}」：${profile.muscleSoreness === '无' ? '身体恢复良好，维持当前营养方案即可' : profile.muscleSoreness === '轻微' ? '轻微酸痛说明肌肉正在适应，补充含镁食物（坚果、深绿蔬菜）促进肌肉放松。今日下午茶' + (snackNames[0] || '原味坚果') + '（腰果、杏仁）富含镁元素' : profile.muscleSoreness === '明显' ? '明显酸痛需要增加抗炎食材辅助恢复，今日食谱中的' + (lunchNames[0] || '三文鱼') + '富含omega-3，具有天然抗炎作用。建议训练后冰敷酸痛部位，睡前热水泡脚' : '严重酸痛需充分休息，增加蛋白质摄入至每公斤体重2.0g，同时补充维生素C（水果）促进胶原蛋白合成，加速肌肉修复'}`,
       ],
     },
     {
@@ -234,7 +242,7 @@ function getPersonalAnalysis(profile: UserProfile | null) {
       color: 'text-chart-4',
       bgColor: 'bg-chart-4/10',
       items: [
-        `昨晚睡眠${profile.sleepHours}小时，质量${profile.sleepQuality}分（满分5分）：${profile.sleepQuality >= 4 ? '睡眠充足，生长激素分泌良好，身体修复充分。今日精力状态应较好，可正常安排工作和运动' : profile.sleepQuality >= 3 ? '睡眠质量尚可，但仍有提升空间。晚餐加入莲子、百合等安神食材辅助改善，今日下午茶枸杞菊花茶也有助清肝安神' : '睡眠质量偏低，皮质醇水平可能偏高，影响代谢和食欲调节。今日增加色氨酸食物（牛奶、香蕉、坚果）促进褪黑素合成。建议今晚睡前1小时远离屏幕，温水泡脚15分钟'}`,
+        `昨晚睡眠${profile.sleepHours}小时，质量${profile.sleepQuality}分（满分5分）：${profile.sleepQuality >= 4 ? '睡眠充足，生长激素分泌良好，身体修复充分。今日精力状态应较好，可正常安排工作和运动。晚餐' + (dinnerNames[0] || '番茄豆腐汤') + '清淡不增加消化负担，有利于维持良好睡眠' : profile.sleepQuality >= 3 ? '睡眠质量尚可，但仍有提升空间。晚餐加入莲子、百合等安神食材辅助改善，今日下午茶' + (snackNames[1] || '枸杞菊花茶') + '也有助清肝安神' : '睡眠质量偏低，皮质醇水平可能偏高，影响代谢和食欲调节。今日增加色氨酸食物（' + (breakfastNames[1] || '鸡蛋') + '、' + (dinnerNames[1] || '白灼虾') + '）促进褪黑素合成。建议今晚睡前1小时远离屏幕，温水泡脚15分钟'}`,
         `精力值${profile.energy}/10：${profile.energy >= 7 ? '精力充沛，可正常安排工作和运动，今日食谱热量分配均衡，能维持稳定精力' : profile.energy >= 5 ? '精力中等，下午可能出现困倦。下午茶补充坚果（约15g）和水果，其中的健康脂肪和天然糖分能快速提升状态。枸杞菊花茶清肝明目，缓解午后精力下降' : '精力偏低，可能与昨晚睡眠不足有关。早餐增加优质蛋白（鸡蛋）和复合碳水（糙米），避免血糖波动导致精力起伏。今日避免高强度工作，安排轻量任务'}`,
         `当前情绪状态为「${profile.mood}」：${profile.mood === '非常好' ? '保持愉悦心情，有助于消化吸收。中医认为"喜则气和志达"，良好情绪能促进脾胃运化，今日食谱营养可被充分吸收' : profile.mood === '一般' ? '情绪平稳，下午补充坚果中的镁元素和维生素B群有助于稳定情绪。晚餐避免过于油腻，清淡饮食有助于保持情绪稳定' : profile.mood === '焦虑' ? '焦虑状态会增加皮质醇分泌，影响消化和代谢。增加富含omega-3的食物（三文鱼、核桃）帮助缓解焦虑，其中的DHA对大脑健康有益。今日下午茶原味坚果中的色氨酸也能促进血清素合成' : '情绪低落时，适当补充富含酪氨酸的食物（香蕉、坚果、豆制品）有助于多巴胺合成。今日食谱中的豆腐、坚果都是良好来源。建议午后散步15分钟，阳光和运动能改善情绪'}`,
       ],
@@ -589,7 +597,7 @@ export default function MealPage() {
         </div>
 
         <div className="space-y-3">
-          {getPersonalAnalysis(userProfile).map((analysis, index) => {
+          {getPersonalAnalysis(userProfile, mealPlan).map((analysis, index) => {
             const Icon = analysis.icon;
             const isExpanded = expandedAnalysis === index;
             return (
