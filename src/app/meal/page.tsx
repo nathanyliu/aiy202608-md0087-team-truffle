@@ -270,8 +270,8 @@ function getPersonalAnalysis(profile: UserProfile | null) {
   return analysis;
 }
 
-// 生成随机食谱的函数
-function generateRandomMealPlan(): MealSlot[] {
+// 生成随机食谱的函数（根据用户健康档案个性化推荐）
+function generateRandomMealPlan(userProfile?: UserProfile | null): MealSlot[] {
   // 早餐选项池
   const breakfastOptions = [
     [
@@ -359,11 +359,45 @@ function generateRandomMealPlan(): MealSlot[] {
     return x - Math.floor(x);
   };
 
-  // 随机选择每个餐段的食谱（基于日期）
-  const randomBreakfast = breakfastOptions[Math.floor(seededRandom(dateSeed) * breakfastOptions.length)];
-  const randomLunch = lunchOptions[Math.floor(seededRandom(dateSeed + 1) * lunchOptions.length)];
-  const randomDinner = dinnerOptions[Math.floor(seededRandom(dateSeed + 2) * dinnerOptions.length)];
-  const randomSnack = snackOptions[Math.floor(seededRandom(dateSeed + 3) * snackOptions.length)];
+  // 根据用户健康档案调整食谱选择
+  const goal = userProfile?.fitnessGoal || '保持健康';
+  const weight = parseFloat(userProfile?.weight || '60');
+  const height = parseFloat(userProfile?.height || '170');
+  const bmi = weight / ((height / 100) ** 2);
+
+  // 根据目标调整选择逻辑
+  let breakfastIndex: number, lunchIndex: number, dinnerIndex: number, snackIndex: number;
+
+  if (goal === '减脂') {
+    // 减脂：选择低热量选项（索引较小的通常是低热量）
+    breakfastIndex = Math.floor(seededRandom(dateSeed) * 2); // 前2个选项
+    lunchIndex = Math.floor(seededRandom(dateSeed + 1) * 2);
+    dinnerIndex = Math.floor(seededRandom(dateSeed + 2) * 2);
+    snackIndex = Math.floor(seededRandom(dateSeed + 3) * 2);
+  } else if (goal === '增肌') {
+    // 增肌：选择高蛋白选项（索引较大的通常是高蛋白）
+    breakfastIndex = Math.floor(seededRandom(dateSeed) * breakfastOptions.length);
+    lunchIndex = 2 + Math.floor(seededRandom(dateSeed + 1) * (lunchOptions.length - 2)); // 后几个选项
+    dinnerIndex = Math.floor(seededRandom(dateSeed + 2) * dinnerOptions.length);
+    snackIndex = Math.floor(seededRandom(dateSeed + 3) * snackOptions.length);
+  } else {
+    // 保持健康/塑形：随机选择
+    breakfastIndex = Math.floor(seededRandom(dateSeed) * breakfastOptions.length);
+    lunchIndex = Math.floor(seededRandom(dateSeed + 1) * lunchOptions.length);
+    dinnerIndex = Math.floor(seededRandom(dateSeed + 2) * dinnerOptions.length);
+    snackIndex = Math.floor(seededRandom(dateSeed + 3) * snackOptions.length);
+  }
+
+  // 确保索引在有效范围内
+  breakfastIndex = Math.min(breakfastIndex, breakfastOptions.length - 1);
+  lunchIndex = Math.min(lunchIndex, lunchOptions.length - 1);
+  dinnerIndex = Math.min(dinnerIndex, dinnerOptions.length - 1);
+  snackIndex = Math.min(snackIndex, snackOptions.length - 1);
+
+  const randomBreakfast = breakfastOptions[breakfastIndex];
+  const randomLunch = lunchOptions[lunchIndex];
+  const randomDinner = dinnerOptions[dinnerIndex];
+  const randomSnack = snackOptions[snackIndex];
 
   return [
     {
@@ -415,15 +449,17 @@ export default function MealPage() {
     } else {
       // 读取用户健康档案
       const profileStr = localStorage.getItem('userProfile');
+      let profile: UserProfile | null = null;
       if (profileStr) {
         try {
-          setUserProfile(JSON.parse(profileStr));
+          profile = JSON.parse(profileStr);
+          setUserProfile(profile);
         } catch {
           // ignore
         }
       }
-      // 生成随机食谱
-      setMealPlan(generateRandomMealPlan());
+      // 生成随机食谱（根据用户健康档案个性化推荐）
+      setMealPlan(generateRandomMealPlan(profile));
       setIsReady(true);
     }
   }, [router]);
