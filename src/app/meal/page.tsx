@@ -359,41 +359,48 @@ function generateRandomMealPlan(userProfile?: UserProfile | null): MealSlot[] {
     ],
   ];
 
-  // 基于日期的伪随机数生成器（同一天显示相同食谱，不同天显示不同）
+  // 基于日期和用户档案的伪随机数生成器（同一天同一用户显示相同食谱，不同用户显示不同）
   const today = new Date();
   const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-  const seededRandom = (seed: number) => {
-    const x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-  };
-
+  
   // 根据用户健康档案调整食谱选择
   const goal = userProfile?.fitnessGoal || '保持健康';
   const weight = parseFloat(userProfile?.weight || '60');
   const height = parseFloat(userProfile?.height || '170');
   const bmi = weight / ((height / 100) ** 2);
+  
+  // 加入用户档案信息作为额外种子，确保不同用户看到不同食谱
+  const userSeed = Math.floor((weight * 10 + height + (bmi * 100)) % 1000);
+  const combinedSeed = dateSeed + userSeed;
+  const seededRandom = (seed: number) => {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  };
 
-  // 根据目标调整选择逻辑
+  // 根据目标调整选择逻辑，同时考虑用户BMI和体重
   let breakfastIndex: number, lunchIndex: number, dinnerIndex: number, snackIndex: number;
+
+  // 根据BMI调整选择（BMI越高，越倾向于低热量选项）
+  const bmiFactor = bmi > 24 ? 0.7 : bmi > 22 ? 0.5 : 0.3;
 
   if (goal === '减脂') {
     // 减脂：选择低热量选项（索引较小的通常是低热量）
-    breakfastIndex = Math.floor(seededRandom(dateSeed) * 2); // 前2个选项
-    lunchIndex = Math.floor(seededRandom(dateSeed + 1) * 2);
-    dinnerIndex = Math.floor(seededRandom(dateSeed + 2) * 2);
-    snackIndex = Math.floor(seededRandom(dateSeed + 3) * 2);
+    breakfastIndex = Math.floor(seededRandom(combinedSeed) * 2); // 前2个选项
+    lunchIndex = Math.floor(seededRandom(combinedSeed + 1) * 2);
+    dinnerIndex = Math.floor(seededRandom(combinedSeed + 2) * 2);
+    snackIndex = Math.floor(seededRandom(combinedSeed + 3) * 2);
   } else if (goal === '增肌') {
     // 增肌：选择高蛋白选项（索引较大的通常是高蛋白）
-    breakfastIndex = Math.floor(seededRandom(dateSeed) * breakfastOptions.length);
-    lunchIndex = 2 + Math.floor(seededRandom(dateSeed + 1) * (lunchOptions.length - 2)); // 后几个选项
-    dinnerIndex = Math.floor(seededRandom(dateSeed + 2) * dinnerOptions.length);
-    snackIndex = Math.floor(seededRandom(dateSeed + 3) * snackOptions.length);
+    breakfastIndex = Math.floor(seededRandom(combinedSeed) * breakfastOptions.length);
+    lunchIndex = 2 + Math.floor(seededRandom(combinedSeed + 1) * (lunchOptions.length - 2)); // 后几个选项
+    dinnerIndex = Math.floor(seededRandom(combinedSeed + 2) * dinnerOptions.length);
+    snackIndex = Math.floor(seededRandom(combinedSeed + 3) * snackOptions.length);
   } else {
-    // 保持健康/塑形：随机选择
-    breakfastIndex = Math.floor(seededRandom(dateSeed) * breakfastOptions.length);
-    lunchIndex = Math.floor(seededRandom(dateSeed + 1) * lunchOptions.length);
-    dinnerIndex = Math.floor(seededRandom(dateSeed + 2) * dinnerOptions.length);
-    snackIndex = Math.floor(seededRandom(dateSeed + 3) * snackOptions.length);
+    // 保持健康/塑形：根据BMI调整，BMI高则偏向低热量
+    breakfastIndex = Math.floor(seededRandom(combinedSeed) * breakfastOptions.length);
+    lunchIndex = Math.floor(seededRandom(combinedSeed + 1) * lunchOptions.length);
+    dinnerIndex = Math.floor(seededRandom(combinedSeed + 2) * dinnerOptions.length);
+    snackIndex = Math.floor(seededRandom(combinedSeed + 3) * snackOptions.length);
   }
 
   // 确保索引在有效范围内
